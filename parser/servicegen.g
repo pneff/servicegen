@@ -89,9 +89,6 @@ outputStatement
     |   variableReference;
 variableReference
     :   '{' IDENTIFIER '}' -> ^(VARREF IDENTIFIER);
-xmlTag
-    :   '<' IDENTIFIER '/>'
-    |   '<' IDENTIFIER '>' xmlTag* '</' IDENTIFIER '>';
 
 /* Primitives */
 IDENTIFIER
