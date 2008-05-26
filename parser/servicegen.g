@@ -79,7 +79,7 @@ xmlTag
 
 /* Primitives */
 IDENTIFIER
-    :   ALPHANUM+;
+    :   (ALPHANUM | '_')+;
 
 fragment
 ALPHANUM:   LETTER | DIGIT;

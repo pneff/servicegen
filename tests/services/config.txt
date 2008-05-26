@@ -8,5 +8,5 @@ config {
     string password;
     
     # Assigns a variable.
-    string user = "myuser";
+    string user_name = "myuser";
 }
