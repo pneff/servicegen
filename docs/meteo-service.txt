@@ -11,9 +11,12 @@ config {
     # database is the data type.
     # db is the variable name.
     database db;
+    
+    # Just for testing
+    int version = 1;
 }
 
-GET /{zip} {
+GET "/{zip}" {
     # Validates input values. Throws an exception with the correct
     # HTTP status code if the input is not correct.
     validate zip /[0-9]{4}/;
@@ -21,20 +24,24 @@ GET /{zip} {
     # Defines the variable data. SELECT statements are automatically
     # executed using the first database connection from config.
     # Use {bla} to reference a defined variable.
-    weather = SELECT * FROM weather WHERE zip={zip} ORDER BY date ASC;
+    records weather = SELECT * FROM weather WHERE zip={zip} ORDER BY date ASC;
     
     # Defines output for XML. This output can be requested in two ways:
     #   - Requesting path with ".xml" at the end
     #   - Sending accept-encoding with XML
     # <...> automatically starts an XML token.
     output.xml {
-        <meteo>
+        "<meteo>"
             {weather}
-        </meteo>
+        "</meteo>"
     }
     
     # Defines output for CSV.
     output.csv {
         {weather}
     }
+}
+
+POST "/foo" {
+    
 }
