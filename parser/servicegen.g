@@ -58,9 +58,7 @@ SqlLiteral
 functionCall
     :  IDENTIFIER '(' functionArgs? ')' -> ^(FUNCTION_CALL functionArgs);
 functionArgs
-    :  functionArg (functionArgAdditional)*;
-functionArgAdditional
-    :   ',' functionArg -> ^(functionArg);
+    :  functionArg (','! functionArg)*;
 functionArg
     :   literal
     |   IDENTIFIER  -> ^(VARREF IDENTIFIER);
