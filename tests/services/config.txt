@@ -9,4 +9,7 @@ config {
     
     # Assigns a variable.
     string user_name = "myuser";
+    
+    # Integer
+    int stations = 10;
 }

@@ -24,6 +24,86 @@ class SimpleParserTest(unittest.TestCase):
         # Service
         self.assertEqual(root.getChild(0).getType(), parser.servicegenLexer.SERVICE)
         self.assertEqual(root.getChild(0).getChild(0).getText(), 'meteo')
+    
+    def testConfigBlock(self):
+        """Tests parsing of a service with a configuration block.
+        """
+        service = self._parseService("config.txt")
+        root = service.tree
+        # Configuration block
+        config = root.getChild(1)
+        self.assertEqual(config.getType(), parser.servicegenLexer.CONFIG)
+    
+    def testConfigUnitialized(self):
+        """
+        Test parsing of a variable in the config block which is
+        not initialized.
+        """
+        service = self._parseService("config.txt")
+        root = service.tree
+        config = root.getChild(1)
+        var = config.getChild(0)
+        self.assertEqual(var.getType(), parser.servicegenLexer.VARIABLE)
+        self.assertEqual(var.getChild(0).getType(), parser.servicegenLexer.VARTYPE)
+        self.assertEqual(var.getChild(0).getChild(0).getText(), 'database')
+        self.assertEqual(var.getChild(1).getType(), parser.servicegenLexer.IDENTIFIER)
+        self.assertEqual(var.getChild(1).getText(), 'db')
+    
+    def testConfigUnitializedString(self):
+        """
+        Testing parsing of a string variable which is not initialized.
+        """
+        service = self._parseService("config.txt")
+        root = service.tree
+        config = root.getChild(1)
+        var = config.getChild(1)
+        self.assertEqual(var.getType(), parser.servicegenLexer.VARIABLE)
+        self.assertEqual(var.getChild(0).getType(), parser.servicegenLexer.VARTYPE)
+        self.assertEqual(var.getChild(0).getChild(0).getText(), 'string')
+        self.assertEqual(var.getChild(1).getType(), parser.servicegenLexer.IDENTIFIER)
+        self.assertEqual(var.getChild(1).getText(), 'password')
+    
+    def testConfigInitializedString(self):
+        """
+        Testing parsing of a variable with an underline in the identifier and
+        which is initialized with a string.
+        """
+        service = self._parseService("config.txt")
+        root = service.tree
+        config = root.getChild(1)
+        var = config.getChild(2)
+        self.assertEqual(var.getType(), parser.servicegenLexer.VARIABLE)
+        self.assertEqual(var.getChild(0).getType(), parser.servicegenLexer.VARTYPE)
+        self.assertEqual(var.getChild(0).getChild(0).getText(), 'string')
+        self.assertEqual(var.getChild(1).getType(), parser.servicegenLexer.IDENTIFIER)
+        self.assertEqual(var.getChild(1).getText(), 'user_name')
+        self.assertEqual(var.getChild(2).getType(), parser.servicegenLexer.LITERAL_STRING)
+        self.assertEqual(var.getChild(2).getChild(0).getText(), '"myuser"')
+    
+    def testConfigInitializedInt(self):
+        """
+        Testing parsing of a variable which is initialized with an int.
+        """
+        service = self._parseService("config.txt")
+        root = service.tree
+        config = root.getChild(1)
+        var = config.getChild(3)
+        self.assertEqual(var.getType(), parser.servicegenLexer.VARIABLE)
+        self.assertEqual(var.getChild(0).getType(), parser.servicegenLexer.VARTYPE)
+        self.assertEqual(var.getChild(0).getChild(0).getText(), 'int')
+        self.assertEqual(var.getChild(1).getType(), parser.servicegenLexer.IDENTIFIER)
+        self.assertEqual(var.getChild(1).getText(), 'stations')
+        self.assertEqual(var.getChild(2).getType(), parser.servicegenLexer.LITERAL_INT)
+        self.assertEqual(var.getChild(2).getChild(0).getText(), '10')
+    
+    def testConfig(self):
+        """Tests parsing of a service with a configuration block.
+        """
+        service = self._parseService("config.txt")
+        root = service.tree
+        # Service
+        self.assertEqual(root.getChild(0).getType(), parser.servicegenLexer.SERVICE)
+        self.assertEqual(root.getChild(0).getChild(0).getText(), 'meteo')
         # Configuration block
         config = root.getChild(1)
         self.assertEqual(config.getType(), parser.servicegenLexer.CONFIG)

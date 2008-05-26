@@ -12,6 +12,7 @@ tokens {
     VARTYPE;
     VARREF;
     LITERAL_STRING;
+    LITERAL_INT;
     LITERAL_REGEXP;
     LITERAL_SQL;
     REQUEST;
@@ -39,11 +40,14 @@ variableType
     :   IDENTIFIER -> ^(VARTYPE IDENTIFIER);
 literal
     :   StringLiteral -> ^(LITERAL_STRING StringLiteral)
+    |   IntLiteral -> ^(LITERAL_INT IntLiteral)
     |   RegexpLiteral -> ^(LITERAL_REGEXP RegexpLiteral)
     |   SqlLiteral -> ^(LITERAL_SQL SqlLiteral)
     ;
 StringLiteral
     :  '"' ~'"'* '"';
+IntLiteral
+    :  DIGIT+;
 RegexpLiteral
     :  '/' ~'/'* '/';
 SqlLiteral
