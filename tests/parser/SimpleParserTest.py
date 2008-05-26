@@ -13,6 +13,20 @@ class SimpleParserTest(unittest.TestCase):
         root = service.tree
         self.assertEqual(root.getChild(0).getText(), 'service')
         self.assertEqual(root.getChild(1).getText(), 'meteo')
+    
+    def testConfig(self):
+        """Tests parsing of a service with a configuration block.
+        """
+        service = self._parseService("config.txt")
+        root = service.tree
+        self.assertEqual(root.getChild(0).getText(), 'service')
+        self.assertEqual(root.getChild(1).getText(), 'meteo')
+        self.assertEqual(root.getChild(3).getText(), 'config')
+        self.assertEqual(root.getChild(5).getText(), 'database')
+        self.assertEqual(root.getChild(6).getText(), 'db')
+        self.assertEqual(root.getChild(8).getText(), 'string')
+        self.assertEqual(root.getChild(9).getText(), 'password')
+        
         
     def _parseService(self, service):
         """Parses the service from the given file."""

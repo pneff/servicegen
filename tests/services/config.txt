@@ -1,0 +1,9 @@
+# Example for a service with a configuration block.
+service meteo;
+
+config {
+    # database is the data type.
+    # db is the variable name.
+    database db;
+    string password;
+}

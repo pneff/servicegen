@@ -16,7 +16,7 @@ request :   HTTP_METHOD path '{' requestBody '}';
 variableDefinition
     :   variableType IDENTIFIER STATEMENT_END;
 variableType
-    :   'database';
+    :   'database' | 'string';
 
 requestBody
     :   requestRule*;
