@@ -1,4 +1,4 @@
-task :default => 'servicegenLexer.py'
+task :default => 'parser/servicegenLexer.py'
 
 file 'parser/servicegenLexer.py' => 'parser/servicegen.g' do |t|
   sh "java org.antlr.Tool parser/servicegen.g"
