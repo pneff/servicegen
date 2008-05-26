@@ -1,4 +1,8 @@
-task :default => 'parser/servicegenLexer.py'
+task :default => 'test'
+
+task :test => 'parser/servicegenLexer.py' do
+  sh "ruby tests.py"
+end
 
 file 'parser/servicegenLexer.py' => 'parser/servicegen.g' do |t|
   sh "java org.antlr.Tool parser/servicegen.g"
