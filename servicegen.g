@@ -8,13 +8,13 @@ options {
 /* Main parts */
 declaration
     :   service config? request*;
-service :   'service' identifier ';';
+service :   'service' IDENTIFIER STATEMENT_END;
 config  :   'config' '{' variableDefinition* '}';
 request :   HTTP_METHOD path '{' requestBody '}';
 
 /* Service body */
 variableDefinition
-    :   variableType identifier ';';
+    :   variableType IDENTIFIER STATEMENT_END;
 variableType
     :   'database';
 
@@ -25,7 +25,7 @@ requestRule
 
 /* Validation */
 validation
-    :   'validate' identifier validationRule ';';
+    :   'validate' IDENTIFIER validationRule STATEMENT_END;
 validationRule
     :   regexpValidationRule;
 regexpValidationRule
@@ -40,10 +40,10 @@ outputType
 outputStatement
     :   variableReference | xmlTag;
 variableReference
-    :   '{' identifier '}';
+    :   '{' IDENTIFIER '}';
 xmlTag
-    :   '<' identifier '/>'
-    |   '<' identifier '>' xmlTag* '</' identifier '>';
+    :   '<' IDENTIFIER '/>'
+    |   '<' IDENTIFIER '>' xmlTag* '</' IDENTIFIER '>';
 
 /* Path as taken from RFC 2396 */
 path    :   '/' path_segments;
@@ -63,11 +63,20 @@ path_escaped
     :   '%' HEX HEX;
 
 /* Primitives */
-identifier
+IDENTIFIER
     :   ALPHANUM+;
-HEX :   DIGIT | 'a'..'f' | 'A'..'F';
-ALPHANUM:   LETTER | DIGIT;
-LETTER  :   'a'..'z' | 'A'..'Z';
-DIGIT   :   '0'..'9';
+
 HTTP_METHOD
     :   'GET' | 'POST' | 'PUT';
+
+fragment
+HEX :   DIGIT | 'a'..'f' | 'A'..'F';
+fragment
+ALPHANUM:   LETTER | DIGIT;
+fragment
+LETTER  :   'a'..'z' | 'A'..'Z';
+fragment
+DIGIT   :   '0'..'9';
+
+STATEMENT_END
+    :   ';';
