@@ -80,3 +80,5 @@ DIGIT   :   '0'..'9';
 
 STATEMENT_END
     :   ';';
+
+WS  :  (' '|'\r'|'\t'|'\u000C'|'\n') {$channel=HIDDEN;};
