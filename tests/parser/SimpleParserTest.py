@@ -84,14 +84,27 @@ class SimpleParserTest(unittest.TestCase):
         service = self._parseService("variable.txt")
         root = service.tree
         request = root.getChild(1)
-        DumpTree(request)
         self.assertEqual(request.getChild(2).getType(), parser.servicegenLexer.STATEMENT_VALIDATE)
         self.assertEqual(request.getChild(2).getChild(0).getType(), parser.servicegenLexer.IDENTIFIER)
         self.assertEqual(request.getChild(2).getChild(0).getText(), 'zip')
         self.assertEqual(request.getChild(2).getChild(1).getType(), parser.servicegenLexer.LITERAL_REGEXP)
         self.assertEqual(request.getChild(2).getChild(1).getChild(0).getText(), '/[0-9]{4}/')
         
-        
+    def testVariableAssignment(self):
+        """
+        Tests assignment of a variable inside a request body.
+        """
+        service = self._parseService("variable.txt")
+        root = service.tree
+        request = root.getChild(1)
+        self.assertEqual(request.getChild(3).getType(), parser.servicegenLexer.VARIABLE)
+        self.assertEqual(request.getChild(3).getChild(0).getType(), parser.servicegenLexer.VARTYPE)
+        self.assertEqual(request.getChild(3).getChild(0).getChild(0).getText(), 'string')
+        self.assertEqual(request.getChild(3).getChild(1).getType(), parser.servicegenLexer.IDENTIFIER)
+        self.assertEqual(request.getChild(3).getChild(1).getText(), 'var')
+        self.assertEqual(request.getChild(3).getChild(2).getType(), parser.servicegenLexer.LITERAL_STRING)
+        self.assertEqual(request.getChild(3).getChild(2).getChild(0).getText(), '"2"')
+    
     def _parseService(self, service):
         """Parses the service from the given file."""
         s = Service()
