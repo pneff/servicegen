@@ -5,10 +5,14 @@ options {
     output=AST;
 }
 
+tokens {
+    SERVICE = 'service';
+}
+
 /* Main parts */
 declaration
     :   service config? request*;
-service :   'service' IDENTIFIER STATEMENT_END;
+service :   'service' IDENTIFIER STATEMENT_END -> ^('service' IDENTIFIER);
 config  :   'config' '{' variableDefinition* '}';
 request :   HTTP_METHOD path '{' requestBody '}';
 
