@@ -2,5 +2,6 @@
 service meteo;
 
 GET "/{zip}" {
+    validate zip /[0-9]{4}/;
     
 }

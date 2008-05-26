@@ -63,7 +63,7 @@ class SimpleParserTest(unittest.TestCase):
         self.assertEqual(request.getChild(1).getType(), parser.servicegenLexer.REQUEST_PATH)
         self.assertEqual(request.getChild(1).getChild(0).getText(), '"/testing/this/path"')
     
-    def testRequestVariable(self):
+    def testVariable(self):
         """
         Tests parsing of a service with one defined request which takes
         a parameter.
@@ -76,6 +76,20 @@ class SimpleParserTest(unittest.TestCase):
         self.assertEqual(request.getChild(0).getText(), 'GET')
         self.assertEqual(request.getChild(1).getType(), parser.servicegenLexer.REQUEST_PATH)
         self.assertEqual(request.getChild(1).getChild(0).getText(), '"/{zip}"')
+        
+    def testVariableValidation(self):
+        """
+        Tests parsing of a service with one defined regexp validation.
+        """
+        service = self._parseService("variable.txt")
+        root = service.tree
+        request = root.getChild(1)
+        DumpTree(request)
+        self.assertEqual(request.getChild(2).getType(), parser.servicegenLexer.STATEMENT_VALIDATE)
+        self.assertEqual(request.getChild(2).getChild(0).getType(), parser.servicegenLexer.IDENTIFIER)
+        self.assertEqual(request.getChild(2).getChild(0).getText(), 'zip')
+        self.assertEqual(request.getChild(2).getChild(1).getType(), parser.servicegenLexer.LITERAL_REGEXP)
+        self.assertEqual(request.getChild(2).getChild(1).getChild(0).getText(), '/[0-9]{4}/')
         
         
     def _parseService(self, service):

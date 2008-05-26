@@ -11,9 +11,11 @@ tokens {
     VARIABLE;
     VARTYPE;
     LITERAL_STRING;
+    LITERAL_REGEXP;
     REQUEST;
     REQUEST_PATH;
     REQUEST_PATH_PARAM;
+    STATEMENT_VALIDATE;
 }
 
 /* Main parts */
@@ -32,10 +34,12 @@ variableType
     :   IDENTIFIER -> ^(VARTYPE IDENTIFIER);
 literal
     :   StringLiteral -> ^(LITERAL_STRING StringLiteral)
+    |   RegexpLiteral -> ^(LITERAL_REGEXP RegexpLiteral)
     ;
 StringLiteral
-    :  '"' ~'"'* '"'
-    ;
+    :  '"' ~'"'* '"';
+RegexpLiteral
+    :  '/' ~'/'* '/';
 
 /* Request */
 HTTP_METHOD
@@ -51,12 +55,7 @@ requestRule
 
 /* Validation */
 validation
-    :   'validate' IDENTIFIER validationRule STATEMENT_END;
-validationRule
-    :   regexpValidationRule;
-regexpValidationRule
-    :   '/' regexp '/';
-regexp  :   ~('/');
+    :   'validate' IDENTIFIER literal STATEMENT_END -> ^(STATEMENT_VALIDATE IDENTIFIER literal);
 
 /* Output of a service */
 outputDefinition
