@@ -13,7 +13,6 @@ class SimpleParserTest(unittest.TestCase):
         service = self._parseService("basic.txt")
         root = service.tree
         self.assertEqual(root.getType(), parser.servicegenLexer.SERVICE)
-        self.assertEqual(root.getText(), 'service')
         self.assertEqual(root.getChild(0).getType(), parser.servicegenLexer.IDENTIFIER)
         self.assertEqual(root.getChild(0).getText(), 'meteo')
     
@@ -24,12 +23,10 @@ class SimpleParserTest(unittest.TestCase):
         root = service.tree
         # Service
         self.assertEqual(root.getChild(0).getType(), parser.servicegenLexer.SERVICE)
-        self.assertEqual(root.getChild(0).getText(), 'service')
         self.assertEqual(root.getChild(0).getChild(0).getText(), 'meteo')
         # Configuration block
         config = root.getChild(1)
         self.assertEqual(config.getType(), parser.servicegenLexer.CONFIG)
-        self.assertEqual(config.getText(), 'config')
         # Variable 1: database: db
         var = config.getChild(0)
         self.assertEqual(var.getType(), parser.servicegenLexer.VARIABLE)
@@ -44,6 +41,15 @@ class SimpleParserTest(unittest.TestCase):
         self.assertEqual(var.getChild(0).getChild(0).getText(), 'string')
         self.assertEqual(var.getChild(1).getType(), parser.servicegenLexer.IDENTIFIER)
         self.assertEqual(var.getChild(1).getText(), 'password')
+        # Variable 2: string: user
+        var = config.getChild(2)
+        self.assertEqual(var.getType(), parser.servicegenLexer.VARIABLE)
+        self.assertEqual(var.getChild(0).getType(), parser.servicegenLexer.VARTYPE)
+        self.assertEqual(var.getChild(0).getChild(0).getText(), 'string')
+        self.assertEqual(var.getChild(1).getType(), parser.servicegenLexer.IDENTIFIER)
+        self.assertEqual(var.getChild(1).getText(), 'user')
+        self.assertEqual(var.getChild(2).getType(), parser.servicegenLexer.LITERAL_STRING)
+        self.assertEqual(var.getChild(2).getChild(0).getText(), '"myuser"')
         
         
     def _parseService(self, service):

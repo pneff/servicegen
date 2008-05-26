@@ -6,4 +6,7 @@ config {
     # db is the variable name.
     database db;
     string password;
+    
+    # Assigns a variable.
+    string user = "myuser";
 }

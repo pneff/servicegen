@@ -6,24 +6,33 @@ options {
 }
 
 tokens {
-    SERVICE  = 'service';
-    CONFIG   = 'config';
-    VARIABLE = 'variable';
-    VARTYPE  = 'vartype';
+    SERVICE;
+    CONFIG;
+    VARIABLE;
+    VARTYPE;
+    LITERAL_STRING;
 }
 
 /* Main parts */
 declaration
     :   service config? request*;
-service :   'service' IDENTIFIER STATEMENT_END -> ^('service' IDENTIFIER);
-config  :   'config' '{' variableDefinition* '}' -> ^('config' variableDefinition*);
+service :   'service' IDENTIFIER STATEMENT_END -> ^(SERVICE IDENTIFIER);
+config  :   'config' '{' variableDefinition* '}' -> ^(CONFIG variableDefinition*);
 request :   HTTP_METHOD path '{' requestBody '}';
 
 /* Service body */
 variableDefinition
-    :   variableType IDENTIFIER STATEMENT_END -> ^('variable' variableType IDENTIFIER);
+    :   variableType IDENTIFIER STATEMENT_END -> ^(VARIABLE variableType IDENTIFIER)
+    |   variableType IDENTIFIER '=' literal STATEMENT_END -> ^(VARIABLE variableType IDENTIFIER literal) 
+    ;
 variableType
-    :   IDENTIFIER -> ^('vartype' IDENTIFIER);
+    :   IDENTIFIER -> ^(VARTYPE IDENTIFIER);
+literal
+    :   StringLiteral -> ^(LITERAL_STRING StringLiteral)
+    ;
+StringLiteral
+    :  '"' ~'"'* '"'
+    ;
 
 requestBody
     :   requestRule*;
