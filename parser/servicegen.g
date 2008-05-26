@@ -17,6 +17,7 @@ tokens {
     REQUEST_PATH;
     REQUEST_PATH_PARAM;
     STATEMENT_VALIDATE;
+    STATEMENT_OUTPUT;
 }
 
 /* Main parts */
@@ -63,7 +64,7 @@ validation
 
 /* Output of a service */
 outputDefinition
-    :   'output.' outputType '{' outputStatement* '}';
+    :   'output.' outputType '{' outputStatement* '}' -> ^(STATEMENT_OUTPUT outputType outputStatement*);
 outputType
     :   'xml' | 'csv';
 outputStatement

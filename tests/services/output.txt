@@ -1,0 +1,7 @@
+service meteo;
+
+GET "/{zip}" {
+    output.xml {
+        
+    }
+}

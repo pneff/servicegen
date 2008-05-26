@@ -120,6 +120,17 @@ class SimpleParserTest(unittest.TestCase):
         self.assertEqual(request.getChild(2).getChild(2).getType(), parser.servicegenLexer.LITERAL_SQL)
         self.assertEqual(request.getChild(2).getChild(2).getChild(0).getText(), 'SELECT * FROM weather WHERE zip={zip} ORDER BY date ASC')
     
+    def testOutput(self):
+        """
+        Tests parsing of output blocks. Currently everything inside the
+        output block is just returned as statements.
+        """
+        service = self._parseService("output.txt")
+        root = service.tree
+        output = root.getChild(1).getChild(2)
+        self.assertEqual(output.getType(), parser.servicegenLexer.STATEMENT_OUTPUT)
+        self.assertEqual(output.getChild(0).getText(), 'xml')
+    
     def _parseService(self, service):
         """Parses the service from the given file."""
         s = Service()
