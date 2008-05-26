@@ -106,3 +106,6 @@ STATEMENT_END
 WS  :  (' '|'\r'|'\t'|'\u000C'|'\n') {$channel=HIDDEN;};
 LINE_COMMENT
     : '#' ~('\n'|'\r')* '\r'? '\n' {$channel=HIDDEN;};
+COMMENT
+    :   '/*' ( options {greedy=false;} : . )* '*/' {$channel=HIDDEN;}
+    ;

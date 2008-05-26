@@ -1,6 +1,8 @@
 # Example for a service with one request.
 service meteo;
 
+/* This is additionally an example of a multiline comment.
+   Which we'd like to be ignored. */
 GET / {
     
 }
