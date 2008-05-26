@@ -11,6 +11,8 @@ tokens {
     VARIABLE;
     VARTYPE;
     LITERAL_STRING;
+    REQUEST;
+    REQUEST_PATH;
 }
 
 /* Main parts */
@@ -18,9 +20,9 @@ declaration
     :   service config? request*;
 service :   'service' IDENTIFIER STATEMENT_END -> ^(SERVICE IDENTIFIER);
 config  :   'config' '{' variableDefinition* '}' -> ^(CONFIG variableDefinition*);
-request :   HTTP_METHOD path '{' requestBody '}';
+request :   HTTP_METHOD requestPath '{' requestBody '}' -> ^(REQUEST HTTP_METHOD requestPath requestBody);
 
-/* Service body */
+/* Configuration */
 variableDefinition
     :   variableType IDENTIFIER STATEMENT_END -> ^(VARIABLE variableType IDENTIFIER)
     |   variableType IDENTIFIER '=' literal STATEMENT_END -> ^(VARIABLE variableType IDENTIFIER literal) 
@@ -33,6 +35,9 @@ literal
 StringLiteral
     :  '"' ~'"'* '"'
     ;
+
+/* Request */
+requestPath: path -> ^(REQUEST_PATH path);
 
 requestBody
     :   requestRule*;
@@ -78,12 +83,12 @@ path_char
 path_escaped
     :   '%' HEX HEX;
 
+HTTP_METHOD
+    :   'GET' | 'POST' | 'PUT';
+
 /* Primitives */
 IDENTIFIER
     :   ALPHANUM+;
-
-HTTP_METHOD
-    :   'GET' | 'POST' | 'PUT';
 
 fragment
 HEX :   DIGIT | 'a'..'f' | 'A'..'F';
@@ -97,7 +102,7 @@ DIGIT   :   '0'..'9';
 STATEMENT_END
     :   ';';
 
+/* Ignore */
 WS  :  (' '|'\r'|'\t'|'\u000C'|'\n') {$channel=HIDDEN;};
-
 LINE_COMMENT
     : '#' ~('\n'|'\r')* '\r'? '\n' {$channel=HIDDEN;};

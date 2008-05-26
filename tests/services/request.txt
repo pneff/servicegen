@@ -1,0 +1,6 @@
+# Example for a service with one request.
+service meteo;
+
+GET / {
+    
+}
