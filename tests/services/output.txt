@@ -4,5 +4,8 @@ GET "/{zip}" {
     output.xml {
         # Output ZIP
         {zip}
+        
+        # Output a string literal
+        "<ml>this is my string</ml>"
     }
 }

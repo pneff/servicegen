@@ -141,6 +141,16 @@ class SimpleParserTest(unittest.TestCase):
         self.assertEqual(var.getType(), parser.servicegenLexer.VARREF)
         self.assertEqual(var.getChild(0).getText(), 'zip')
     
+    def testOutputString(self):
+        """
+        Tests parsing of string literals inside the output block.
+        """
+        service = self._parseService("output.txt")
+        root = service.tree
+        literal = root.getChild(1).getChild(2).getChild(2)
+        self.assertEqual(literal.getType(), parser.servicegenLexer.LITERAL_STRING)
+        self.assertEqual(literal.getChild(0).getText(), '"<ml>this is my string</ml>"')
+    
     def _parseService(self, service):
         """Parses the service from the given file."""
         s = Service()
