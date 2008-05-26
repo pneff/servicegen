@@ -1,1 +1,2 @@
+# A hashed comment should be ignored
 service meteo;
