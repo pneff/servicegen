@@ -1,5 +1,10 @@
 grammar servicegen;
 
+options {
+    language=Python;
+    output=AST;
+}
+
 /* Main parts */
 declaration
     :   service config? request*;
