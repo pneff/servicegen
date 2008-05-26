@@ -1,0 +1,6 @@
+# Example for a service with one request which takes a variable.
+service meteo;
+
+GET "/{zip}" {
+    
+}

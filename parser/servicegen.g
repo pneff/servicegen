@@ -13,6 +13,7 @@ tokens {
     LITERAL_STRING;
     REQUEST;
     REQUEST_PATH;
+    REQUEST_PATH_PARAM;
 }
 
 /* Main parts */
@@ -37,7 +38,11 @@ StringLiteral
     ;
 
 /* Request */
-requestPath: path -> ^(REQUEST_PATH path);
+HTTP_METHOD
+    :   'GET' | 'POST' | 'PUT';
+
+requestPath
+    : StringLiteral -> ^(REQUEST_PATH StringLiteral);
 
 requestBody
     :   requestRule*;
@@ -65,17 +70,6 @@ variableReference
 xmlTag
     :   '<' IDENTIFIER '/>'
     |   '<' IDENTIFIER '>' xmlTag* '</' IDENTIFIER '>';
-
-path
-    :   '/' path_chars*;
-path_chars
-    :   ALPHANUM
-    |   '/' | ':' | '@'  | '&' | '=' | '+'
-    |   '$' | ',' | '-'  | '_' | '.' | '!'
-    |   '~' | '*' | '\'' | '(' | ')' | '%'
-    ;
-HTTP_METHOD
-    :   'GET' | 'POST' | 'PUT';
 
 /* Primitives */
 IDENTIFIER
