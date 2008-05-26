@@ -151,6 +151,28 @@ class SimpleParserTest(unittest.TestCase):
         self.assertEqual(literal.getType(), parser.servicegenLexer.LITERAL_STRING)
         self.assertEqual(literal.getChild(0).getText(), '"<ml>this is my string</ml>"')
     
+    def testMembers(self):
+        """
+        Define externals members inside the service definition.
+        """
+        service = self._parseService("members.txt")
+        root = service.tree
+        var = root.getChild(2).getChild(4)
+        self.assertEqual(var.getType(), parser.servicegenLexer.VARIABLE)
+        self.assertEqual(var.getChild(0).getType(), parser.servicegenLexer.VARTYPE)
+        self.assertEqual(var.getChild(0).getChild(0).getText(), 'hash')
+        self.assertEqual(var.getChild(1).getType(), parser.servicegenLexer.IDENTIFIER)
+        self.assertEqual(var.getChild(1).getText(), 'stations')
+        self.assertEqual(var.getChild(2).getType(), parser.servicegenLexer.FUNCTION_CALL)
+        self.assertEqual(var.getChild(2).getChild(0).getType(), parser.servicegenLexer.VARREF)
+        self.assertEqual(var.getChild(2).getChild(0).getChild(0).getText(), 'locations')
+        self.assertEqual(var.getChild(2).getChild(1).getType(), parser.servicegenLexer.LITERAL_STRING)
+        self.assertEqual(var.getChild(2).getChild(1).getChild(0).getText(), '"stations"')
+        self.assertEqual(var.getChild(2).getChild(2).getType(), parser.servicegenLexer.VARREF)
+        self.assertEqual(var.getChild(2).getChild(2).getChild(0).getText(), 'x')
+        self.assertEqual(var.getChild(2).getChild(3).getType(), parser.servicegenLexer.VARREF)
+        self.assertEqual(var.getChild(2).getChild(3).getChild(0).getText(), 'y')
+    
     def _parseService(self, service):
         """Parses the service from the given file."""
         s = Service()

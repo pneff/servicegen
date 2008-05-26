@@ -1,0 +1,22 @@
+# Name of this service
+service wintersport;
+
+config {
+    # Defines the URL to request another web service.
+    # The URL is the default and can be overwritten using an
+    # external configuration.
+    aservice station_details = "http://snow.myswitzerland.com/XmlResort.jsp?lang=de&stationId={station}";
+    
+    # Defines an XML file to query data in.
+    dom locations = "data/skiorte.xml";
+    
+    # Number of stations to return
+    int max_stations = "40";
+}
+
+GET "/by_coordinates/{x},{y}" {
+    validate x /[0-9]+/;
+    validate y /[0-9]+/;
+    
+    hash stations = getStations(locations, "stations", x, y);
+}

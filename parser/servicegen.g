@@ -19,6 +19,7 @@ tokens {
     REQUEST_PATH_PARAM;
     STATEMENT_VALIDATE;
     STATEMENT_OUTPUT;
+    FUNCTION_CALL;
 }
 
 /* Main parts */
@@ -32,6 +33,7 @@ request :   HTTP_METHOD requestPath '{' requestBody '}' -> ^(REQUEST HTTP_METHOD
 variableDefinition
     :   variableType IDENTIFIER STATEMENT_END -> ^(VARIABLE variableType IDENTIFIER)
     |   variableType IDENTIFIER '=' literal STATEMENT_END -> ^(VARIABLE variableType IDENTIFIER literal) 
+    |   variableType IDENTIFIER '=' functionCall STATEMENT_END -> ^(VARIABLE variableType IDENTIFIER functionCall)
     ;
 variableType
     :   IDENTIFIER -> ^(VARTYPE IDENTIFIER);
@@ -46,6 +48,15 @@ RegexpLiteral
     :  '/' ~'/'* '/';
 SqlLiteral
     :  'SELECT' ~(STATEMENT_END)*;
+functionCall
+    :  IDENTIFIER '(' functionArgs? ')' -> ^(FUNCTION_CALL functionArgs);
+functionArgs
+    :  functionArg (functionArgAdditional)*;
+functionArgAdditional
+    :   ',' functionArg -> ^(functionArg);
+functionArg
+    :   literal
+    |   IDENTIFIER  -> ^(VARREF IDENTIFIER);
 
 /* Request */
 HTTP_METHOD
