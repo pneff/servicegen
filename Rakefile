@@ -1,7 +1,7 @@
 task :default => 'test'
 
 task :test => 'parser/servicegenLexer.py' do
-  sh "ruby tests.py"
+  sh "python tests.py"
 end
 
 file 'parser/servicegenLexer.py' => 'parser/servicegen.g' do |t|
