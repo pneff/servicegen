@@ -10,6 +10,7 @@ tokens {
     CONFIG;
     VARIABLE;
     VARTYPE;
+    VARREF;
     LITERAL_STRING;
     LITERAL_REGEXP;
     LITERAL_SQL;
@@ -68,9 +69,10 @@ outputDefinition
 outputType
     :   'xml' | 'csv';
 outputStatement
-    :   variableReference | xmlTag;
+    :   literal
+    |   variableReference;
 variableReference
-    :   '{' IDENTIFIER '}';
+    :   '{' IDENTIFIER '}' -> ^(VARREF IDENTIFIER);
 xmlTag
     :   '<' IDENTIFIER '/>'
     |   '<' IDENTIFIER '>' xmlTag* '</' IDENTIFIER '>';

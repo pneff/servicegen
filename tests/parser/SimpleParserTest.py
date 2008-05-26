@@ -131,6 +131,16 @@ class SimpleParserTest(unittest.TestCase):
         self.assertEqual(output.getType(), parser.servicegenLexer.STATEMENT_OUTPUT)
         self.assertEqual(output.getChild(0).getText(), 'xml')
     
+    def testOutputVariableReference(self):
+        """
+        Tests parsing of variable references inside the output block.
+        """
+        service = self._parseService("output.txt")
+        root = service.tree
+        var = root.getChild(1).getChild(2).getChild(1)
+        self.assertEqual(var.getType(), parser.servicegenLexer.VARREF)
+        self.assertEqual(var.getChild(0).getText(), 'zip')
+    
     def _parseService(self, service):
         """Parses the service from the given file."""
         s = Service()

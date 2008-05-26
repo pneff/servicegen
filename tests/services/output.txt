@@ -2,6 +2,7 @@ service meteo;
 
 GET "/{zip}" {
     output.xml {
-        
+        # Output ZIP
+        {zip}
     }
 }
