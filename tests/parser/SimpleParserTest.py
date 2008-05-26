@@ -47,7 +47,7 @@ class SimpleParserTest(unittest.TestCase):
         self.assertEqual(var.getChild(0).getType(), parser.servicegenLexer.VARTYPE)
         self.assertEqual(var.getChild(0).getChild(0).getText(), 'string')
         self.assertEqual(var.getChild(1).getType(), parser.servicegenLexer.IDENTIFIER)
-        self.assertEqual(var.getChild(1).getText(), 'user')
+        self.assertEqual(var.getChild(1).getText(), 'user_name')
         self.assertEqual(var.getChild(2).getType(), parser.servicegenLexer.LITERAL_STRING)
         self.assertEqual(var.getChild(2).getChild(0).getText(), '"myuser"')
     
