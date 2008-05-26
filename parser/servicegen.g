@@ -21,14 +21,17 @@ tokens {
     STATEMENT_VALIDATE;
     STATEMENT_OUTPUT;
     FUNCTION_CALL;
+    EXTERNAL;
 }
 
 /* Main parts */
 declaration
-    :   service config? request*;
+    :   service config? external* request*;
 service :   'service' IDENTIFIER STATEMENT_END -> ^(SERVICE IDENTIFIER);
 config  :   'config' '{' variableDefinition* '}' -> ^(CONFIG variableDefinition*);
 request :   HTTP_METHOD requestPath '{' requestBody '}' -> ^(REQUEST HTTP_METHOD requestPath requestBody);
+external
+    :   '@external:' IDENTIFIER StringLiteral STATEMENT_END -> ^(EXTERNAL IDENTIFIER StringLiteral);
 
 /* Configuration */
 variableDefinition

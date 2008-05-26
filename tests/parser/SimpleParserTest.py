@@ -231,13 +231,13 @@ class SimpleParserTest(unittest.TestCase):
         self.assertEqual(literal.getType(), parser.servicegenLexer.LITERAL_STRING)
         self.assertEqual(literal.getChild(0).getText(), '"<ml>this is my string</ml>"')
     
-    def testMembers(self):
+    def testFunctionCall(self):
         """
-        Define externals members inside the service definition.
+        Call functions for variable assignments.
         """
         service = self._parseService("members.txt")
         root = service.tree
-        var = root.getChild(2).getChild(4)
+        var = root.getChild(3).getChild(4)
         self.assertEqual(var.getType(), parser.servicegenLexer.VARIABLE)
         self.assertEqual(var.getChild(0).getType(), parser.servicegenLexer.VARTYPE)
         self.assertEqual(var.getChild(0).getChild(0).getText(), 'hash')
@@ -252,6 +252,17 @@ class SimpleParserTest(unittest.TestCase):
         self.assertEqual(var.getChild(2).getChild(2).getChild(0).getText(), 'x')
         self.assertEqual(var.getChild(2).getChild(3).getType(), parser.servicegenLexer.VARREF)
         self.assertEqual(var.getChild(2).getChild(3).getChild(0).getText(), 'y')
+    
+    def testExternal(self):
+        """
+        Define externals members inside the service definition.
+        """
+        service = self._parseService("members.txt")
+        root = service.tree
+        external = root.getChild(2)
+        self.assertEqual(external.getType(), parser.servicegenLexer.EXTERNAL)
+        self.assertEqual(external.getChild(0).getText(), "php")
+        self.assertEqual(external.getChild(1).getText(), '"filename.php"')
     
     def _parseService(self, service):
         """Parses the service from the given file."""
