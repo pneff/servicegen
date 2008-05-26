@@ -66,23 +66,14 @@ xmlTag
     :   '<' IDENTIFIER '/>'
     |   '<' IDENTIFIER '>' xmlTag* '</' IDENTIFIER '>';
 
-/* Path as taken from RFC 2396 */
-path    :   '/' path_segments;
-path_segments
-    :   path_segment ('/' path_segment)*;
-path_segment
-    :   path_char* (';' path_param)*;
-path_param
-    :   path_char*;
-path_char
-    :   ALPHANUM | path_escaped
-    |   ':' | '@' | '&' | '='
-    |   '+' | '$' | ',' | '-'
-    |   '_' | '.' | '!' | '~'
-    |   '*' | '\'' | '(' | ')';
-path_escaped
-    :   '%' HEX HEX;
-
+path
+    :   '/' path_chars*;
+path_chars
+    :   ALPHANUM
+    |   '/' | ':' | '@'  | '&' | '=' | '+'
+    |   '$' | ',' | '-'  | '_' | '.' | '!'
+    |   '~' | '*' | '\'' | '(' | ')' | '%'
+    ;
 HTTP_METHOD
     :   'GET' | 'POST' | 'PUT';
 
@@ -90,8 +81,6 @@ HTTP_METHOD
 IDENTIFIER
     :   ALPHANUM+;
 
-fragment
-HEX :   DIGIT | 'a'..'f' | 'A'..'F';
 fragment
 ALPHANUM:   LETTER | DIGIT;
 fragment
