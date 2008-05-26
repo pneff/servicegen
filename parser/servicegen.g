@@ -12,6 +12,7 @@ tokens {
     VARTYPE;
     LITERAL_STRING;
     LITERAL_REGEXP;
+    LITERAL_SQL;
     REQUEST;
     REQUEST_PATH;
     REQUEST_PATH_PARAM;
@@ -35,11 +36,14 @@ variableType
 literal
     :   StringLiteral -> ^(LITERAL_STRING StringLiteral)
     |   RegexpLiteral -> ^(LITERAL_REGEXP RegexpLiteral)
+    |   SqlLiteral -> ^(LITERAL_SQL SqlLiteral)
     ;
 StringLiteral
     :  '"' ~'"'* '"';
 RegexpLiteral
     :  '/' ~'/'* '/';
+SqlLiteral
+    :  'SELECT' ~(STATEMENT_END)*;
 
 /* Request */
 HTTP_METHOD

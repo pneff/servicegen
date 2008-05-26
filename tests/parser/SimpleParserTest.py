@@ -105,6 +105,21 @@ class SimpleParserTest(unittest.TestCase):
         self.assertEqual(request.getChild(3).getChild(2).getType(), parser.servicegenLexer.LITERAL_STRING)
         self.assertEqual(request.getChild(3).getChild(2).getChild(0).getText(), '"2"')
     
+    def testSql(self):
+        """
+        Tests assignment of a variable which consists of an SQL query.
+        """
+        service = self._parseService("sql.txt")
+        root = service.tree
+        request = root.getChild(1)
+        self.assertEqual(request.getChild(2).getType(), parser.servicegenLexer.VARIABLE)
+        self.assertEqual(request.getChild(2).getChild(0).getType(), parser.servicegenLexer.VARTYPE)
+        self.assertEqual(request.getChild(2).getChild(0).getChild(0).getText(), 'records')
+        self.assertEqual(request.getChild(2).getChild(1).getType(), parser.servicegenLexer.IDENTIFIER)
+        self.assertEqual(request.getChild(2).getChild(1).getText(), 'weather')
+        self.assertEqual(request.getChild(2).getChild(2).getType(), parser.servicegenLexer.LITERAL_SQL)
+        self.assertEqual(request.getChild(2).getChild(2).getChild(0).getText(), 'SELECT * FROM weather WHERE zip={zip} ORDER BY date ASC')
+    
     def _parseService(self, service):
         """Parses the service from the given file."""
         s = Service()

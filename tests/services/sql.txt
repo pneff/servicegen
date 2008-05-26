@@ -1,0 +1,6 @@
+# Example for a service with an SQL statement.
+service meteo;
+
+GET "/{zip}" {
+    records weather = SELECT * FROM weather WHERE zip={zip} ORDER BY date ASC;
+}
