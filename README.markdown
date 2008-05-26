@@ -1,0 +1,49 @@
+servicegen
+==========
+
+servicegen is a small domain specific language to specify web services.
+The idea is to lower the barrier for creating a new service.
+
+The simple service description will abstract a few common tasks:
+
+  - Getting input parameters and validate them.
+  - Get data from other web services or a database.
+  - Configuration handling for deployments.
+  - Logging.
+  - Caching using e.g. memcached.
+
+A few features can be provided based on the input format:
+
+   - Create service in various programming languages and frameworks. I can
+     imagine creating output for [web.py][], [Okapi][], [Spring][], etc.
+     This would allow to easily switch deployment platform depending on
+     current requirements.
+   - Create documentation for the service in a consistent format.
+   - Maybe even create clients for various programming languages.
+
+
+Status
+------
+Started on May 26, 2008 by [Patrice Neff][] during a local.ch-internal
+hack day. Currently doesn't do much. There is:
+
+  - An ANTLR grammar for a basic service description.
+  - A generator in Python which gives some output based on what it parsed.
+
+
+Usage
+-----
+On a shell execute gen.py like this:
+
+    $ ./gen.py docs/meteo-service.txt
+
+
+Future
+------
+We'll see. :-)
+
+
+[web.py]: http://webpy.org/
+[Okapi]: http://okapi.liip.ch/
+[Spring]: http://www.springframework.org/
+[Patrice Neff]: http://weblog.patrice.ch/
