@@ -1,27 +1,42 @@
-# Name of this service
+# Careful: This service is not parsed correctly yet.
+# Consider this a vision statement.
+
 service wintersport;
+@author  "Patrice Neff"
+@version "1.0"
 
 config {
     # Defines the URL to request another web service.
     # The URL is the default and can be overwritten using an
     # external configuration.
+    @doc "The official service by MySwitzerland for querying skiing resorts."
     service station_details = "http://snow.myswitzerland.com/XmlResort.jsp?lang=de&stationId={station}";
     
     # Defines an XML file to query data in.
+    @doc "Cached version of all locations to use for the near search."
     dom locations = "data/skiorte.xml";
     
-    # Number of stations to return
+    @doc "Number of stations to return."
     int stations = 40;
 }
 
 # Defines code which is executed in PHP.
-@members:php "wintersport.php";
+members:php "wintersport.php";
 
 GET /by_coordinates/{x},{y} {
+    @doc     "Returns 40 wintersport locations from the given center.";
+    @param x "X coordinate of the center in the Swiss coordinate system.";
+    @param y "Y coordinate of the center in the Swiss coordinate system.";
+    
+    # Calls the internal function "validate" which throws an
+    # exception with the correct HTTP response codes if the
+    # input is incorrect.
     validate x /[0-9]+/;
     validate y /[0-9]+/;
     
-    stations = member getStations(locations, stations, x, y);
+    # Calls the PHP function geStations as defined above.
+    # Caches the value of stations for one day.
+    hash cached(1 day) stations = getStations(locations, stations, x, y);
     
     output.xml {
         <resorts>
