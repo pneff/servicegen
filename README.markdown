@@ -11,6 +11,7 @@ The simple service description will abstract a few common tasks:
   - Configuration handling for deployments.
   - Logging.
   - Caching using e.g. memcached.
+  - Correct handling of HTTP caching.
 
 A few features can be provided based on the input format:
 
@@ -37,6 +38,14 @@ On a shell execute gen.py like this:
 
     $ ./gen.py docs/meteo-service.txt
 
+
+Design Choices
+--------------
+
+    - Variables can't change their value once the value is defined.
+      This way on assignment of each variable it can be determined
+      whether the variable can be read from a cache or not depending
+      on the keyword "cached".
 
 Future
 ------
