@@ -19,7 +19,7 @@ config {
 GET "/{zip}" {
     # Validates input values. Throws an exception with the correct
     # HTTP status code if the input is not correct.
-    validate zip /[0-9]{4}/;
+    validate zip, /[0-9]{4}/;
     
     # Defines the variable data. SELECT statements are automatically
     # executed using the first database connection from config.

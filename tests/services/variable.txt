@@ -2,7 +2,7 @@
 service meteo;
 
 GET "/{zip}" {
-    validate zip /[0-9]{4}/;
+    validate(zip, /[0-9]{4}/);
     
     # Assign a variable
     string var = "2";

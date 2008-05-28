@@ -31,8 +31,8 @@ GET /by_coordinates/{x},{y} {
     # Calls the internal function "validate" which throws an
     # exception with the correct HTTP response codes if the
     # input is incorrect.
-    validate x /[0-9]+/;
-    validate y /[0-9]+/;
+    validate x, /[0-9]+/;
+    validate y, /[0-9]+/;
     
     # Calls the PHP function geStations as defined above.
     # Caches the value of stations for one day.

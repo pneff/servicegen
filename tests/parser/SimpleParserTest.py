@@ -163,13 +163,13 @@ class SimpleParserTest(unittest.TestCase):
         """
         service = self._parseService("variable.txt")
         root = service.tree
-        request = root.getChild(1)
-        self.assertEqual(request.getChild(2).getType(), parser.servicegenLexer.STATEMENT_VALIDATE)
-        self.assertEqual(request.getChild(2).getChild(0).getType(), parser.servicegenLexer.IDENTIFIER)
-        self.assertEqual(request.getChild(2).getChild(0).getText(), 'zip')
-        self.assertEqual(request.getChild(2).getChild(1).getType(), parser.servicegenLexer.LITERAL_REGEXP)
-        self.assertEqual(request.getChild(2).getChild(1).getChild(0).getText(), '/[0-9]{4}/')
-        
+        validate = root.getChild(1).getChild(2)
+        self.assertEqual(validate.getType(), parser.servicegenLexer.FUNCTION_CALL)
+        self.assertEqual(validate.getChild(0).getType(), parser.servicegenLexer.VARREF)
+        self.assertEqual(validate.getChild(0).getChild(0).getText(), 'zip')
+        self.assertEqual(validate.getChild(1).getType(), parser.servicegenLexer.LITERAL_REGEXP)
+        self.assertEqual(validate.getChild(1).getChild(0).getText(), '/[0-9]{4}/')
+    
     def testVariableAssignment(self):
         """
         Tests assignment of a variable inside a request body.

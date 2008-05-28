@@ -14,11 +14,11 @@ config {
     int max_stations = "40";
 }
 
-@external:php "filename.php";
+external:php "filename.php";
 
 GET "/by_coordinates/{x},{y}" {
-    validate x /[0-9]+/;
-    validate y /[0-9]+/;
+    validate x, /[0-9]+/;
+    validate y, /[0-9]+/;
     
     hash stations = getStations(locations, "stations", x, y);
 }

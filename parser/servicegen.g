@@ -28,16 +28,19 @@ tokens {
 declaration
     :   service config? external* request*;
 service :   'service' IDENTIFIER STATEMENT_END -> ^(SERVICE IDENTIFIER);
-config  :   'config' '{' variableDefinition* '}' -> ^(CONFIG variableDefinition*);
+config  :   'config' '{' (configVariableDefinition STATEMENT_END)* '}' -> ^(CONFIG configVariableDefinition*);
 request :   HTTP_METHOD requestPath '{' requestBody '}' -> ^(REQUEST HTTP_METHOD requestPath requestBody);
 external
-    :   '@external:' IDENTIFIER StringLiteral STATEMENT_END -> ^(EXTERNAL IDENTIFIER StringLiteral);
+    :   'external:' IDENTIFIER StringLiteral STATEMENT_END -> ^(EXTERNAL IDENTIFIER StringLiteral);
 
 /* Configuration */
+configVariableDefinition
+    :   variableType IDENTIFIER -> ^(VARIABLE variableType IDENTIFIER)
+    |   variableDefinition
+    ;
 variableDefinition
-    :   variableType IDENTIFIER STATEMENT_END -> ^(VARIABLE variableType IDENTIFIER)
-    |   variableType IDENTIFIER '=' literal STATEMENT_END -> ^(VARIABLE variableType IDENTIFIER literal) 
-    |   variableType IDENTIFIER '=' functionCall STATEMENT_END -> ^(VARIABLE variableType IDENTIFIER functionCall)
+    :   variableType IDENTIFIER '=' literal -> ^(VARIABLE variableType IDENTIFIER literal)
+    |   variableType IDENTIFIER '=' functionCall -> ^(VARIABLE variableType IDENTIFIER functionCall)
     ;
 variableType
     :   IDENTIFIER -> ^(VARTYPE IDENTIFIER);
@@ -56,7 +59,9 @@ RegexpLiteral
 SqlLiteral
     :  'SELECT' ~(STATEMENT_END)*;
 functionCall
-    :  IDENTIFIER '(' functionArgs? ')' -> ^(FUNCTION_CALL functionArgs);
+    :  IDENTIFIER '(' functionArgs? ')' -> ^(FUNCTION_CALL functionArgs)
+    |  IDENTIFIER functionArgs          -> ^(FUNCTION_CALL functionArgs)
+    ;
 functionArgs
     :  functionArg (','! functionArg)*;
 functionArg
@@ -73,11 +78,10 @@ requestPath
 requestBody
     :   requestRule*;
 requestRule
-    :   validation | variableDefinition | outputDefinition;
-
-/* Validation */
-validation
-    :   'validate' IDENTIFIER literal STATEMENT_END -> ^(STATEMENT_VALIDATE IDENTIFIER literal);
+    : functionCall STATEMENT_END!
+    | variableDefinition STATEMENT_END!
+    | outputDefinition
+    ;
 
 /* Output of a service */
 outputDefinition
