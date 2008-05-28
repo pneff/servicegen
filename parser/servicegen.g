@@ -22,6 +22,8 @@ tokens {
     STATEMENT_OUTPUT;
     FUNCTION_CALL;
     EXTERNAL;
+    CACHE;
+    DURATION_DAYS;
 }
 
 /* Main parts */
@@ -39,11 +41,21 @@ configVariableDefinition
     |   variableDefinition
     ;
 variableDefinition
-    :   variableType IDENTIFIER '=' literal -> ^(VARIABLE variableType IDENTIFIER literal)
-    |   variableType IDENTIFIER '=' functionCall -> ^(VARIABLE variableType IDENTIFIER functionCall)
+    :   variableType variableCache? IDENTIFIER '=' literal -> ^(VARIABLE variableType variableCache? IDENTIFIER literal)
+    |   variableType variableCache? IDENTIFIER '=' functionCall -> ^(VARIABLE variableType variableCache? IDENTIFIER functionCall)
     ;
 variableType
     :   IDENTIFIER -> ^(VARTYPE IDENTIFIER);
+
+/* Caching of variables */
+variableCache
+    : 'cached<' duration '>'  -> ^(CACHE duration);
+duration
+    : durationDay;
+durationDay
+    : IntLiteral 'day'  -> ^(DURATION_DAYS IntLiteral);
+
+/* Literals */
 literal
     :   StringLiteral -> ^(LITERAL_STRING StringLiteral)
     |   IntLiteral -> ^(LITERAL_INT IntLiteral)

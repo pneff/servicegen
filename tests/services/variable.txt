@@ -6,4 +6,7 @@ GET "/{zip}" {
     
     # Assign a variable
     string var = "2";
+    
+    # Assign a variable and cache the result
+    int cached<1 day> cachedForOneDay = 3;
 }

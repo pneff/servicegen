@@ -185,6 +185,24 @@ class SimpleParserTest(unittest.TestCase):
         self.assertEqual(request.getChild(3).getChild(2).getType(), parser.servicegenLexer.LITERAL_STRING)
         self.assertEqual(request.getChild(3).getChild(2).getChild(0).getText(), '"2"')
     
+    def testVariableCache(self):
+        """
+        Tests caching keyword of a variable.
+        """
+        service = self._parseService("variable.txt")
+        root = service.tree
+        var = root.getChild(1).getChild(4)
+        self.assertEqual(var.getType(), parser.servicegenLexer.VARIABLE)
+        self.assertEqual(var.getChild(0).getType(), parser.servicegenLexer.VARTYPE)
+        self.assertEqual(var.getChild(0).getChild(0).getText(), 'int')
+        self.assertEqual(var.getChild(1).getType(), parser.servicegenLexer.CACHE)
+        self.assertEqual(var.getChild(1).getChild(0).getType(), parser.servicegenLexer.DURATION_DAYS)
+        self.assertEqual(var.getChild(1).getChild(0).getChild(0).getText(), '1')
+        self.assertEqual(var.getChild(2).getType(), parser.servicegenLexer.IDENTIFIER)
+        self.assertEqual(var.getChild(2).getText(), 'cachedForOneDay')
+        self.assertEqual(var.getChild(3).getType(), parser.servicegenLexer.LITERAL_INT)
+        self.assertEqual(var.getChild(3).getChild(0).getText(), '3')
+    
     def testSql(self):
         """
         Tests assignment of a variable which consists of an SQL query.
