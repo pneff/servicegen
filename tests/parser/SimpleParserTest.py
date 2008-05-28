@@ -211,7 +211,11 @@ class SimpleParserTest(unittest.TestCase):
         self.assertEqual(request.getChild(5).getChild(1).getChild(0).getType(), parser.servicegenLexer.DURATION_MINUTES)
         self.assertEqual(request.getChild(6).getChild(1).getChild(0).getType(), parser.servicegenLexer.DURATION_HOURS)
         self.assertEqual(request.getChild(7).getChild(1).getChild(0).getType(), parser.servicegenLexer.DURATION_SECONDS)
-        
+        self.assertEqual(request.getChild(8).getChild(1).getChild(0).getType(), parser.servicegenLexer.DURATION_DAYS)
+        self.assertEqual(request.getChild(9).getChild(1).getChild(0).getType(), parser.servicegenLexer.DURATION_MINUTES)
+        self.assertEqual(request.getChild(10).getChild(1).getChild(0).getType(), parser.servicegenLexer.DURATION_HOURS)
+        self.assertEqual(request.getChild(11).getChild(1).getChild(0).getType(), parser.servicegenLexer.DURATION_SECONDS)
+    
     def testSql(self):
         """
         Tests assignment of a variable which consists of an SQL query.

@@ -23,6 +23,9 @@ tokens {
     FUNCTION_CALL;
     EXTERNAL;
     CACHE;
+    DURATION_SECONDS;
+    DURATION_MINUTES;
+    DURATION_HOURS;
     DURATION_DAYS;
 }
 
@@ -51,9 +54,15 @@ variableType
 variableCache
     : 'cached<' duration '>'  -> ^(CACHE duration);
 duration
-    : durationDay;
-durationDay
-    : IntLiteral 'day'  -> ^(DURATION_DAYS IntLiteral);
+    : IntLiteral 'minute'  -> ^(DURATION_MINUTES IntLiteral)
+    | IntLiteral 'minutes' -> ^(DURATION_MINUTES IntLiteral)
+    | IntLiteral 'second'  -> ^(DURATION_SECONDS IntLiteral)
+    | IntLiteral 'seconds' -> ^(DURATION_SECONDS IntLiteral)
+    | IntLiteral 'hour'    -> ^(DURATION_HOURS IntLiteral)
+    | IntLiteral 'hours'   -> ^(DURATION_HOURS IntLiteral)
+    | IntLiteral 'day'     -> ^(DURATION_DAYS IntLiteral)
+    | IntLiteral 'days'    -> ^(DURATION_DAYS IntLiteral)
+    ;
 
 /* Literals */
 literal
