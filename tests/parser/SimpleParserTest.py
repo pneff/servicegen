@@ -203,6 +203,15 @@ class SimpleParserTest(unittest.TestCase):
         self.assertEqual(var.getChild(3).getType(), parser.servicegenLexer.LITERAL_INT)
         self.assertEqual(var.getChild(3).getChild(0).getText(), '3')
     
+    def testDurations(self):
+        """Various durations."""
+        service = self._parseService("variable.txt")
+        root = service.tree
+        request = root.getChild(1)
+        self.assertEqual(request.getChild(5).getChild(1).getChild(0).getType(), parser.servicegenLexer.DURATION_MINUTES)
+        self.assertEqual(request.getChild(6).getChild(1).getChild(0).getType(), parser.servicegenLexer.DURATION_HOURS)
+        self.assertEqual(request.getChild(7).getChild(1).getChild(0).getType(), parser.servicegenLexer.DURATION_SECONDS)
+        
     def testSql(self):
         """
         Tests assignment of a variable which consists of an SQL query.
