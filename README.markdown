@@ -30,6 +30,7 @@ hack day. Currently doesn't do much. There is:
 
   - An ANTLR grammar for a basic service description.
   - A generator in Python which gives some output based on what it parsed.
+  - An extensive grammar documentation showing what's the intention.
 
 
 Usage
@@ -42,17 +43,17 @@ On a shell execute gen.py like this:
 Design Choices
 --------------
 
-    - Variables can't change their value once the value is defined.
-      This way on assignment of each variable it can be determined
-      whether the variable can be read from a cache or not depending
-      on the keyword "cached".
+  - Variables can't change their value once the value is defined.
+    This way on assignment of each variable it can be determined
+    whether the variable can be read from a cache or not depending
+    on the keyword "cached".
 
 Future
 ------
 We'll see. :-)
 
 
-[web.py]: http://webpy.org/
-[Okapi]: http://okapi.liip.ch/
-[Spring]: http://www.springframework.org/
+[web.py]:       http://webpy.org/
+[Okapi]:        http://okapi.liip.ch/
+[Spring]:       http://www.springframework.org/
 [Patrice Neff]: http://weblog.patrice.ch/
