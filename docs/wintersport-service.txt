@@ -21,7 +21,7 @@ config {
 }
 
 # Defines code which is executed in PHP.
-members:php "wintersport.php";
+external:php "wintersport.php";
 
 GET /by_coordinates/{x},{y} {
     @doc     "Returns 40 wintersport locations from the given center.";
