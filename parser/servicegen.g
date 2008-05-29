@@ -27,6 +27,8 @@ tokens {
     DURATION_MINUTES;
     DURATION_HOURS;
     DURATION_DAYS;
+    DURATION_MONTHS;
+    DURATION_YEARS;
 }
 
 /* Main parts */
@@ -44,24 +46,28 @@ configVariableDefinition
     |   variableDefinition
     ;
 variableDefinition
-    :   variableType variableCache? IDENTIFIER '=' literal -> ^(VARIABLE variableType variableCache? IDENTIFIER literal)
-    |   variableType variableCache? IDENTIFIER '=' functionCall -> ^(VARIABLE variableType variableCache? IDENTIFIER functionCall)
+    :   variableType caching? IDENTIFIER '=' literal -> ^(VARIABLE variableType caching? IDENTIFIER literal)
+    |   variableType caching? IDENTIFIER '=' functionCall -> ^(VARIABLE variableType caching? IDENTIFIER functionCall)
     ;
 variableType
     :   IDENTIFIER -> ^(VARTYPE IDENTIFIER);
 
 /* Caching of variables */
-variableCache
+caching
     : 'cached<' duration '>'  -> ^(CACHE duration);
 duration
-    : IntLiteral 'minute'  -> ^(DURATION_MINUTES IntLiteral)
-    | IntLiteral 'minutes' -> ^(DURATION_MINUTES IntLiteral)
-    | IntLiteral 'second'  -> ^(DURATION_SECONDS IntLiteral)
+    : IntLiteral 'second'  -> ^(DURATION_SECONDS IntLiteral)
     | IntLiteral 'seconds' -> ^(DURATION_SECONDS IntLiteral)
+    | IntLiteral 'minute'  -> ^(DURATION_MINUTES IntLiteral)
+    | IntLiteral 'minutes' -> ^(DURATION_MINUTES IntLiteral)
     | IntLiteral 'hour'    -> ^(DURATION_HOURS IntLiteral)
     | IntLiteral 'hours'   -> ^(DURATION_HOURS IntLiteral)
     | IntLiteral 'day'     -> ^(DURATION_DAYS IntLiteral)
     | IntLiteral 'days'    -> ^(DURATION_DAYS IntLiteral)
+    | IntLiteral 'month'   -> ^(DURATION_MONTHS IntLiteral)
+    | IntLiteral 'months'  -> ^(DURATION_MONTHS IntLiteral)
+    | IntLiteral 'year'    -> ^(DURATION_YEARS IntLiteral)
+    | IntLiteral 'years'   -> ^(DURATION_YEARS IntLiteral)
     ;
 
 /* Literals */
