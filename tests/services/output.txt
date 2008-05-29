@@ -9,3 +9,10 @@ GET "/{zip}" {
         "<ml>this is my string</ml>"
     }
 }
+
+GET "/additional" {
+    # Caches the complete output for 3 days
+    # Usually it's better to just cache the variables, though.
+    output.xml cached<8 months> {
+    }
+}

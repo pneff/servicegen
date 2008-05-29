@@ -262,6 +262,17 @@ class SimpleParserTest(unittest.TestCase):
         self.assertEqual(literal.getType(), parser.servicegenLexer.LITERAL_STRING)
         self.assertEqual(literal.getChild(0).getText(), '"<ml>this is my string</ml>"')
     
+    def testOutputCache(self):
+        """
+        Tests cache of an output block.
+        """
+        service = self._parseService("output.txt")
+        output = service.tree.getChild(2).getChild(2)
+        self.assertEqual(output.getType(), parser.servicegenLexer.STATEMENT_OUTPUT)
+        self.assertEqual(output.getChild(1).getType(), parser.servicegenLexer.CACHE)
+        self.assertEqual(output.getChild(1).getChild(0).getType(), parser.servicegenLexer.DURATION_MONTHS)
+        self.assertEqual(output.getChild(1).getChild(0).getChild(0).getText(), '8')
+    
     def testFunctionCall(self):
         """
         Call functions for variable assignments.

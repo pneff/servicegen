@@ -112,7 +112,8 @@ requestRule
 
 /* Output of a service */
 outputDefinition
-    :   'output.' outputType '{' outputStatement* '}' -> ^(STATEMENT_OUTPUT outputType outputStatement*);
+    :   'output.' outputType caching? '{' outputStatement* '}'
+                    -> ^(STATEMENT_OUTPUT outputType caching? outputStatement*);
 outputType
     :   'xml' | 'csv';
 outputStatement
