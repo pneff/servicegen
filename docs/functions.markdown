@@ -8,15 +8,38 @@ They are designed to work well with HTTP.
     validate(value, comparison)
 
 The `validate` function takes two parameters. A value to validate and a value
-to validate against. Usually you'll use that at the beginning of the request
-block to make sure the incoming values conform to the specification.
+to validate against. Usually you'll use this function at the beginning of the
+request block to make sure the incoming values conform to the specification.
 
-If the value does not validate, an exception will be thrown. This means that
-the service will output a valid answer for the current request type (an XML
-structure if the client is requesting an XML document, a text output for text
-output, etc.). Additionally the HTTP response code 400 (Bad Request) is sent.
+If the value does not validate, an exception is thrown. This means that the
+service outputs a valid answer for the current request type (an XML structure
+if the client is requesting an XML document, a text output for text output,
+etc.). Additionally the HTTP response code 400 (Bad Request) is sent.
 
 If you pass in a regexp literal, the value must match exactly against that
 expression. So passing in `/[0-9]{4}/` is the same as passing in
 `/^[0-9]{4}$/`. If any other literal is passed in as comparison value, the
 value must match exactly.
+
+
+## log.*
+
+    log.trace(message, params...)
+    log.debug(message, params...)
+    log.info(message, params...)
+    log.warn(message, params...)
+    log.error(message, params...)
+    log.fatal(message, params...)
+
+Logs the message with the level defined by the function name. Logging levels
+and destinations can be set at deployment. So a developer will usually set the
+level to 'debug' but may track down a problem with 'trace'. In production
+environments the level will usually be set to 'error'.
+
+The generated code by servicegen also uses the same logging framework,
+especially the 'trace' method to make sure that code flow can easily be
+debugged.
+
+`message` can contain very simple format specifiers (inspired by C's printf).
+In the servicegen framework only the '%s' modifier is used and supported. It's
+used to easily add the given params at the correct place in the output.
