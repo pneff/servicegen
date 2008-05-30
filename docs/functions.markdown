@@ -64,7 +64,7 @@ In the case that the request continues, the "ETag" response header is set.
 
 ## expires
 
-  expires(duration)
+    expires(duration)
 
 Specifies how long the response is to be cached by clients. The input must be
 of the duration variable type. For any other value the function will return
