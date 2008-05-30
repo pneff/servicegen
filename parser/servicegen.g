@@ -87,7 +87,7 @@ SqlLiteral
     :  'SELECT' ~(STATEMENT_END)*;
 functionCall
     :  IDENTIFIER '(' functionArgs? ')' -> ^(FUNCTION_CALL functionArgs)
-    |  IDENTIFIER functionArgs          -> ^(FUNCTION_CALL functionArgs)
+    |  IDENTIFIER functionArgs?         -> ^(FUNCTION_CALL functionArgs)
     ;
 functionArgs
     :  functionArg (','! functionArg)*;
@@ -103,11 +103,10 @@ requestPath
     : StringLiteral -> ^(REQUEST_PATH StringLiteral);
 
 requestBody
-    :   requestRule*;
-requestRule
+    :   statement* outputDefinition*;
+statement
     : functionCall STATEMENT_END!
     | variableDefinition STATEMENT_END!
-    | outputDefinition
     ;
 
 /* Output of a service */
