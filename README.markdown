@@ -1,5 +1,4 @@
-servicegen
-==========
+# servicegen
 
 servicegen is a small domain specific language to specify web services.
 The idea is to lower the barrier for creating a new service.
@@ -23,8 +22,8 @@ A few features can be provided based on the input format:
    - Maybe even create clients for various programming languages.
 
 
-Status
-------
+## Status
+
 Started on May 26, 2008 by [Patrice Neff][] during a local.ch-internal
 hack day. Currently doesn't do much. There is:
 
@@ -33,23 +32,22 @@ hack day. Currently doesn't do much. There is:
   - An extensive grammar documentation showing what's the intention.
 
 
-Usage
------
+## Usage
+
 On a shell execute gen.py like this:
 
     $ ./gen.py docs/meteo-service.txt
 
 
-Design Choices
---------------
+## Design Choices
 
   - Variables can't change their value once the value is defined.
     This way on assignment of each variable it can be determined
     whether the variable can be read from a cache or not depending
     on the keyword "cached".
 
-Future
-------
+## Future
+
 We'll see. :-)
 
 
