@@ -43,3 +43,35 @@ debugged.
 `message` can contain very simple format specifiers (inspired by C's printf).
 In the servicegen framework only the '%s' modifier is used and supported. It's
 used to easily add the given params at the correct place in the output.
+
+
+## etag
+
+    etag(hash)
+
+Calling the etag function allows you to implement a very easy HTTP cache
+handling. You call it with the hash you want to assign to the current request.
+If you pass in any non-string data type, servicegen will calculate a hash out
+of the variable's content.
+
+If the client has sent a "If-None-Match" HTTP header containing exactly that
+hash, then the request is immediately aborted and the response code 304 (Not
+Modified) is sent. If the client sets the "no-cache" option in its
+"Cache-Control" header, this behaviour is turned off.
+
+In the case that the request continues, the "ETag" response header is set.
+
+
+## expires
+
+  expires(duration)
+
+Specifies how long the response is to be cached by clients. The input must be
+of the duration variable type. For any other value the function will return
+and log an error.
+
+The function sets the two HTTP headers "Expires" and "Cache-Control"
+correctly. Expires is for HTTP/1.0 implementations, Cache-Control for 1.1. The
+effect is that the client knows that it can (but doesn't have to) cache the
+response for the duration period.
+
