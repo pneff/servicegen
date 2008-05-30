@@ -16,4 +16,7 @@ GET "/{zip}" {
     int cached<5 minutes> cachedForFiveMinutes = 8;
     int cached<5 hours> cachedForFiveHours = 9;
     int cached<5 seconds> cachedForFiveSeconds = 10;
+    
+    # Assign an XML literal to a variable
+    dom xmlTest = <testing>;
 }

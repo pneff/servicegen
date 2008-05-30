@@ -16,6 +16,7 @@ tokens {
     LITERAL_REGEXP;
     LITERAL_SQL;
     LITERAL_DURATION;
+    LITERAL_XML;
     REQUEST;
     REQUEST_PATH;
     REQUEST_PATH_PARAM;
@@ -64,6 +65,7 @@ literal
     |   RegexpLiteral -> ^(LITERAL_REGEXP RegexpLiteral)
     |   SqlLiteral -> ^(LITERAL_SQL SqlLiteral)
     |   durationLiteral -> ^(LITERAL_DURATION durationLiteral)
+    |   xmlLiteral -> ^(LITERAL_XML xmlLiteral)
     ;
 StringLiteral
     :  '"' ~'"'* '"';
@@ -87,6 +89,8 @@ durationLiteral
     | IntLiteral 'year'    -> ^(DURATION_YEARS IntLiteral)
     | IntLiteral 'years'   -> ^(DURATION_YEARS IntLiteral)
     ;
+xmlLiteral
+    : '<' ~'>'+ '>';
 
 functionCall
     :  IDENTIFIER '(' functionArgs? ')' -> ^(FUNCTION_CALL functionArgs)

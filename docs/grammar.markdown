@@ -158,6 +158,8 @@ There are several kind of literals that can be used as values.
   - Duration: Starts with a number, followed by a duration word. The following
     durations are recognized: second, seconds, minute, minutes, hour, hours,
     day, days, month, months, year, years.
+  - XML: Starts with a left angle bracket '<' and ends with a right angle
+    bracket '>'.
 
 
 ### Variable types
@@ -168,13 +170,12 @@ The following variable types are currently in use:
   - `int`: Corresponds to the Int literal.
   - `regexp`: Corresponds to the Regexp literal.
   - `sql`: Corresponds to the SQL literal.
+  - `dom`: An XML literal or an XML document.
   - `duration`: Corresponds to the Duration literal.
   - `database`: A database connection. Can currently only be defined in the
                 config block.
   - `service`: A REST web service which can be queried. TODO: How to query a
                service?
-  - `dom`: An XML document, opened using a DOM. Can for example be used as a
-           cheap and dirty database. TODO: How to query?
   - `array`: Holds a list of other objects.
   - `hash`: Bolds key/value pairs.
   - `records`: Basically an array of hashes. Stores the result of a database
@@ -224,17 +225,21 @@ Some transformations will happen automatically based on the variable type and ou
 For some transformations the variable name is important. In that case it's
 referenced as 'varname' in the output specification.
 
-- `string`: Output as is.
-- `int`: Output as is.
-- `regexp`: Output as is.
-- `sql`: Executed and output the same way as `records`.
-- `database`: Can't be output. Will be ignored, but a warning is logged.
-- `service`: Can't be output. Will be ignored, but a warning is logged.
-- `dom`: Output as XML.
-- `array`: Creates one `<varname>value</varname>` tag for each element.
-           The value output is itself transformed based on its type.
-- `hash`: Creates a `<varname>` tag, inside that creates pairs of
-          `<key>value</key>`.
-- `records`: As it's an array of hashes, Creates one `<varname>` tag for each
-             record and inside that `<key>value</key>` tags.
+  - `string`: Output as is.
+  - `int`: Output as is.
+  - `regexp`: Output as is.
+  - `sql`: Executed and output the same way as `records`.
+  - `duration`: Output as it was declared - in a human-readable form.
+  - `dom`: Output verbatim, without any escaping.
+  - `database`: Can't be output. Will be ignored, but a warning is logged.
+  - `service`: Can't be output. Will be ignored, but a warning is logged.
+  - `dom`: Output as XML.
+  - `array`: Creates one `<varname>value</varname>` tag for each element.
+             The value output is itself transformed based on its type.
+  - `hash`: Creates a `<varname>` tag, inside that creates pairs of
+            `<key>value</key>`.
+  - `records`: As it's an array of hashes, Creates one `<varname>` tag for
+               each record and inside that `<key>value</key>` tags.
 
+All values with the exception of doms and XML literals are automatically
+escaped for use in XML.
