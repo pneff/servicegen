@@ -5,7 +5,7 @@ config {
     # Defines the URL to request another web service.
     # The URL is the default and can be overwritten using an
     # external configuration.
-    aservice station_details = "http://snow.myswitzerland.com/XmlResort.jsp?lang=de&stationId={station}";
+    service station_details = "http://snow.myswitzerland.com/XmlResort.jsp?lang=de&stationId={station}";
     
     # Defines an XML file to query data in.
     dom locations = "data/skiorte.xml";

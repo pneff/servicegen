@@ -52,7 +52,12 @@ variableDefinition
     |   variableType caching? IDENTIFIER '=' functionCall -> ^(VARIABLE variableType caching? IDENTIFIER functionCall)
     ;
 variableType
-    :   IDENTIFIER -> ^(VARTYPE IDENTIFIER);
+    :   variableTypeIdentifier -> ^(VARTYPE variableTypeIdentifier);
+variableTypeIdentifier
+    :   'string' | 'int' | 'regexp' | 'sql' | 'duration'
+    |   'database' | 'service' | 'dom' | 'array' | 'hash'
+    |   'records'
+    ;
 
 /* Caching of variables */
 caching
