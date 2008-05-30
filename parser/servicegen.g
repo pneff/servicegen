@@ -15,6 +15,7 @@ tokens {
     LITERAL_INT;
     LITERAL_REGEXP;
     LITERAL_SQL;
+    LITERAL_DURATION;
     REQUEST;
     REQUEST_PATH;
     REQUEST_PATH_PARAM;
@@ -54,8 +55,25 @@ variableType
 
 /* Caching of variables */
 caching
-    : 'cached<' duration '>'  -> ^(CACHE duration);
-duration
+    : 'cached<' durationLiteral '>'  -> ^(CACHE durationLiteral);
+
+/* Literals */
+literal
+    :   StringLiteral -> ^(LITERAL_STRING StringLiteral)
+    |   IntLiteral -> ^(LITERAL_INT IntLiteral)
+    |   RegexpLiteral -> ^(LITERAL_REGEXP RegexpLiteral)
+    |   SqlLiteral -> ^(LITERAL_SQL SqlLiteral)
+    |   durationLiteral -> ^(LITERAL_DURATION durationLiteral)
+    ;
+StringLiteral
+    :  '"' ~'"'* '"';
+IntLiteral
+    :  DIGIT+;
+RegexpLiteral
+    :  '/' ~'/'* '/';
+SqlLiteral
+    :  'SELECT' ~(STATEMENT_END)*;
+durationLiteral
     : IntLiteral 'second'  -> ^(DURATION_SECONDS IntLiteral)
     | IntLiteral 'seconds' -> ^(DURATION_SECONDS IntLiteral)
     | IntLiteral 'minute'  -> ^(DURATION_MINUTES IntLiteral)
@@ -70,21 +88,6 @@ duration
     | IntLiteral 'years'   -> ^(DURATION_YEARS IntLiteral)
     ;
 
-/* Literals */
-literal
-    :   StringLiteral -> ^(LITERAL_STRING StringLiteral)
-    |   IntLiteral -> ^(LITERAL_INT IntLiteral)
-    |   RegexpLiteral -> ^(LITERAL_REGEXP RegexpLiteral)
-    |   SqlLiteral -> ^(LITERAL_SQL SqlLiteral)
-    ;
-StringLiteral
-    :  '"' ~'"'* '"';
-IntLiteral
-    :  DIGIT+;
-RegexpLiteral
-    :  '/' ~'/'* '/';
-SqlLiteral
-    :  'SELECT' ~(STATEMENT_END)*;
 functionCall
     :  IDENTIFIER '(' functionArgs? ')' -> ^(FUNCTION_CALL functionArgs)
     |  IDENTIFIER functionArgs?         -> ^(FUNCTION_CALL functionArgs)

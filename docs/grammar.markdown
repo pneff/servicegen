@@ -155,16 +155,20 @@ There are several kind of literals that can be used as values.
   - Regexp: Starts and ends with a slash.
   - SQL: Starts with 'SELECT' and runs until the end of the current statement
     (usually the semicolon).
+  - Duration: Starts with a number, followed by a duration word. The following
+    durations are recognized: second, seconds, minute, minutes, hour, hours,
+    day, days, month, months, year, years.
 
 
 ### Variable types
 
 The following variable types are currently in use:
 
-  - `string`: Corresponds to String literal.
-  - `int`: Corresponds to Int literal.
-  - `regexp`: Corresponds to Regexp literal.
-  - `sql`: Corresponds to SQL literal.
+  - `string`: Corresponds to the String literal.
+  - `int`: Corresponds to the Int literal.
+  - `regexp`: Corresponds to the Regexp literal.
+  - `sql`: Corresponds to the SQL literal.
+  - `duration`: Corresponds to the Duration literal.
   - `database`: A database connection. Can currently only be defined in the
                 config block.
   - `service`: A REST web service which can be queried. TODO: How to query a
