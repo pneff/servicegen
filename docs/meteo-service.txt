@@ -1,4 +1,6 @@
-# Name of this service
+@doc     "Provides weather forecast information for Switzerland."
+@author  "Patrice Neff"
+@version "1.0"
 service meteo;
 
 # Comments can be included with hash
@@ -10,38 +12,32 @@ service meteo;
 config {
     # database is the data type.
     # db is the variable name.
+    @param db "Database containing the weather information. Must have a table 'weather' with one entry per day."
     database db;
-    
-    # Just for testing
-    int version = 1;
 }
 
+@doc       "Returns all available forecasts for a ZIP code in Switzerland."
+@param zip "ZIP code for which to get weather forecast"
 GET "/{zip}" {
-    # Validates input values. Throws an exception with the correct
-    # HTTP status code if the input is not correct.
     validate zip, /[0-9]{4}/;
     
     # Defines the variable data. SELECT statements are automatically
     # executed using the first database connection from config.
-    # Use {bla} to reference a defined variable.
     records weather = SELECT * FROM weather WHERE zip={zip} ORDER BY date ASC;
     
     # Defines output for XML. This output can be requested in two ways:
     #   - Requesting path with ".xml" at the end
     #   - Sending accept-encoding with XML
     # <...> automatically starts an XML token.
+    @doc "Returns the weather forecast in XML format."
     output.xml {
-        "<meteo>"
+        <meteo>
             {weather}
-        "</meteo>"
+        </meteo>
     }
     
     # Defines output for CSV.
     output.csv {
         {weather}
     }
-}
-
-POST "/foo" {
-    
 }

@@ -1,0 +1,19 @@
+# Test for documentation
+@doc     "Provides weather forecast information for Switzerland."
+@author  "Patrice Neff"
+@version "1.0"
+service meteo;
+
+config {
+    @param db "Database containing the weather information. Must have a table 'weather' with one entry per day."
+    database db;
+}
+
+@doc       "Returns all available forecasts for a ZIP code in Switzerland."
+@param zip "ZIP code for which to get weather forecast"
+GET "/{zip}" {
+    
+    @doc "Returns the weather forecast in XML format."
+    output.xml {
+    }
+}

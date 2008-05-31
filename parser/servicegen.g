@@ -31,25 +31,27 @@ tokens {
     DURATION_DAYS;
     DURATION_MONTHS;
     DURATION_YEARS;
+    DOC;
+    DOC_FOR;
 }
 
 /* Main parts */
 declaration
     :   service config? external* request*;
-service :   'service' IDENTIFIER STATEMENT_END -> ^(SERVICE IDENTIFIER);
+service :   docStatement* 'service' IDENTIFIER STATEMENT_END -> ^(SERVICE IDENTIFIER docStatement*);
 config  :   'config' '{' (configVariableDefinition STATEMENT_END)* '}' -> ^(CONFIG configVariableDefinition*);
-request :   HTTP_METHOD requestPath '{' requestBody '}' -> ^(REQUEST HTTP_METHOD requestPath requestBody);
+request :   docStatement* HTTP_METHOD requestPath '{' requestBody '}' -> ^(REQUEST HTTP_METHOD requestPath requestBody docStatement*);
 external
-    :   'external:' IDENTIFIER StringLiteral STATEMENT_END -> ^(EXTERNAL IDENTIFIER StringLiteral);
+    :   docStatement* 'external:' IDENTIFIER StringLiteral STATEMENT_END -> ^(EXTERNAL IDENTIFIER StringLiteral docStatement*);
 
 /* Configuration */
 configVariableDefinition
-    :   variableType IDENTIFIER -> ^(VARIABLE variableType IDENTIFIER)
+    :   docStatement* variableType IDENTIFIER -> ^(VARIABLE variableType IDENTIFIER docStatement*)
     |   variableDefinition
     ;
 variableDefinition
-    :   variableType caching? IDENTIFIER '=' literal -> ^(VARIABLE variableType caching? IDENTIFIER literal)
-    |   variableType caching? IDENTIFIER '=' functionCall -> ^(VARIABLE variableType caching? IDENTIFIER functionCall)
+    :   docStatement* variableType caching? IDENTIFIER '=' literal -> ^(VARIABLE variableType caching? IDENTIFIER literal docStatement*)
+    |   docStatement* variableType caching? IDENTIFIER '=' functionCall -> ^(VARIABLE variableType caching? IDENTIFIER functionCall docStatement*)
     ;
 variableType
     :   variableTypeIdentifier -> ^(VARTYPE variableTypeIdentifier);
@@ -123,8 +125,8 @@ statement
 
 /* Output of a service */
 outputDefinition
-    :   'output.' outputType caching? '{' outputStatement* '}'
-                    -> ^(STATEMENT_OUTPUT outputType caching? outputStatement*);
+    :   docStatement* 'output.' outputType caching? '{' outputStatement* '}'
+                    -> ^(STATEMENT_OUTPUT outputType caching? outputStatement* docStatement*);
 outputType
     :   'xml' | 'csv';
 outputStatement
@@ -132,6 +134,14 @@ outputStatement
     |   variableReference;
 variableReference
     :   '{' IDENTIFIER '}' -> ^(VARREF IDENTIFIER);
+
+/* Documentation */
+docStatement
+    :   '@' docName StringLiteral -> ^(DOC docName StringLiteral)
+    |   '@param' IDENTIFIER StringLiteral -> ^(DOC_FOR IDENTIFIER StringLiteral)
+    ;
+docName
+    :   'doc' | 'author' | 'version';
 
 /* Primitives */
 IDENTIFIER

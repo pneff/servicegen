@@ -318,6 +318,55 @@ class SimpleParserTest(unittest.TestCase):
         self.assertEqual(external.getChild(0).getText(), "php")
         self.assertEqual(external.getChild(1).getText(), '"filename.php"')
     
+    def testDocumentationServiceDoc(self):
+        """Tests the description documentation tags of the service."""
+        service = self._parseService("docs.txt").tree.getChild(0)
+        self.assertEqual(service.getChild(1).getType(), parser.servicegenLexer.DOC)
+        self.assertEqual(service.getChild(1).getChild(0).getText(), "doc")
+        self.assertEqual(service.getChild(1).getChild(1).getText(), '"Provides weather forecast information for Switzerland."')
+    
+    def testDocumentationServiceAuthor(self):
+        """Tests the author documentation tag of the service."""
+        service = self._parseService("docs.txt").tree.getChild(0)
+        self.assertEqual(service.getChild(2).getType(), parser.servicegenLexer.DOC)
+        self.assertEqual(service.getChild(2).getChild(0).getText(), "author")
+        self.assertEqual(service.getChild(2).getChild(1).getText(), '"Patrice Neff"')
+    
+    def testDocumentationServiceVersion(self):
+        """Tests the version documentation tag of the service."""
+        service = self._parseService("docs.txt").tree.getChild(0)
+        self.assertEqual(service.getChild(3).getType(), parser.servicegenLexer.DOC)
+        self.assertEqual(service.getChild(3).getChild(0).getText(), "version")
+        self.assertEqual(service.getChild(3).getChild(1).getText(), '"1.0"')
+    
+    def testDocumentationConfigVar(self):
+        """Tests the documentation of a config variable."""
+        cfgvar = self._parseService("docs.txt").tree.getChild(1).getChild(0)
+        self.assertEqual(cfgvar.getChild(2).getType(), parser.servicegenLexer.DOC_FOR)
+        self.assertEqual(cfgvar.getChild(2).getChild(0).getText(), "db")
+        self.assertEqual(cfgvar.getChild(2).getChild(1).getText(), '"Database containing the weather information. Must have a table \'weather\' with one entry per day."')
+    
+    def testDocumentationRequest(self):
+        """Tests the documentation of a request block."""
+        request = self._parseService("docs.txt").tree.getChild(2)
+        self.assertEqual(request.getChild(3).getType(), parser.servicegenLexer.DOC)
+        self.assertEqual(request.getChild(3).getChild(0).getText(), "doc")
+        self.assertEqual(request.getChild(3).getChild(1).getText(), '"Returns all available forecasts for a ZIP code in Switzerland."')
+    
+    def testDocumentationRequestParam(self):
+        """Tests the documentation of a request param."""
+        request = self._parseService("docs.txt").tree.getChild(2)
+        self.assertEqual(request.getChild(4).getType(), parser.servicegenLexer.DOC_FOR)
+        self.assertEqual(request.getChild(4).getChild(0).getText(), "zip")
+        self.assertEqual(request.getChild(4).getChild(1).getText(), '"ZIP code for which to get weather forecast"')
+    
+    def testDocumentationOutput(self):
+        """Tests the documentation of an output block."""
+        output = self._parseService("docs.txt").tree.getChild(2).getChild(2)
+        self.assertEqual(output.getChild(1).getType(), parser.servicegenLexer.DOC)
+        self.assertEqual(output.getChild(1).getChild(0).getText(), "doc")
+        self.assertEqual(output.getChild(1).getChild(1).getText(), '"Returns the weather forecast in XML format."')
+    
     def _parseService(self, service):
         """Parses the service from the given file."""
         s = Service()
