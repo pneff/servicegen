@@ -243,3 +243,25 @@ referenced as 'varname' in the output specification.
 
 All values with the exception of doms and XML literals are automatically
 escaped for use in XML.
+
+
+### Inline documentation
+
+Apart from comments there is a possibility to include documentation in the
+service definition. Those documentation strings are used to generate
+documentation documents directly from the source. There are two different ways
+of including documentation:
+
+  1. @doc "Documentation string for next statement"
+  2. @param db "Documentation for db"
+
+The first option applies to the next statement in the code. The second one is
+explicitly for the db param. Those statements can be included directly before:
+
+  - service name
+  - variable declarations (inside requests and config blocks)
+  - external includes
+  - request blocks
+  - output blocks
+
+A documentation block is not terminated by semicolon.
