@@ -1,4 +1,5 @@
 import parser.servicegenParser
+from tools.Service import DumpTree
 
 class Process:
     """
@@ -9,6 +10,9 @@ class Process:
         self.__config = {}
         self.__requests = []
         self.__getLexerSymbols()
+        self.__inConfig = False
+        self.__currentVar = {}
+        self.__currentRequest = {}
         self.walk(tree)
     
     def getName(self):
@@ -28,19 +32,23 @@ class Process:
         Create a table to be able to look up token IDs and
         return the token symbol.
         """
-        tokens = ['SERVICE', 'CONFIG', 'REQUEST']
+        tokens = [method[5:] for method in dir(self) if method[0:5] == 'walk_']
         self.lookup = {}
         for token in tokens:
             value = getattr(parser.servicegenParser, token)
             self.lookup[value] = token
     
-    def walk(self, tree):
-        method = 'walk_%s' % self.__getTokenName(tree)
-        if hasattr(self, method):
-            getattr(self, method)(tree)
-        elif tree.getChildCount() > 0:
-            for i in range(tree.getChildCount()):
+    def walktree(self, tree):
+        if node.getChildCount() > 0:
+            for i in range(node.getChildCount()):
                 self.walk(tree.getChild(i))
+    
+    def walk(self, node):
+        method = 'walk_%s' % self.__getTokenName(node)
+        if hasattr(self, method):
+            getattr(self, method)(node)
+        else:
+            self.walk_tree(node)
     
     def walk_SERVICE(self, tree):
         serviceName = tree.getChild(0).getText()
@@ -48,24 +56,49 @@ class Process:
     
     def walk_CONFIG(self, tree):
         # List of variables
-        for i in range(tree.getChildCount()):
-            var = tree.getChild(i)
-            vartype = var.getChild(0).getChild(0).getText()
-            varname = var.getChild(1).getText()
-            varvalue = var.getChild(2)
-            if varvalue:
-                varvalue = varvalue.getChild(0).getText()
-            self.__config[varname] = {'type': vartype, 'value': varvalue}
+        self.__inConfig = True
+        self.walk_tree(tree)
+        self.__inConfig = False
+    
+    def walk_VARIABLE(self, tree):
+        name = tree.getChild(1).getText()
+        self.__currentVar = {}
+        self.walk_tree(tree)
+        if self.__inConfig:
+            self.__config[name] = self.__currentVar
+    
+    def walk_VARTYPE(self, tree):
+        self.__currentVar['type'] = tree.getChild(0).getText()
+    
+    def walk_VARREF(self, tree):
+        self.__currentVar['name'] = tree.getChild(0).getText()
+    
+    def walk_LITERAL_STRING(self, tree):
+        self.__currentVar['value'] = {'type': 'string', 'value': tree.getChild(0).getText()}
+    
+    def walk_LITERAL_INT(self, tree):
+        self.__currentVar['value'] = {'type': 'int', 'value': tree.getChild(0).getText()}
+    
+    def walk_LITERAL_REGEXP(self, tree):
+        self.__currentVar['value'] = {'type': 'regexp', 'value': tree.getChild(0).getText()}
+    
+    def walk_LITERAL_SQL(self, tree):
+        self.__currentVar['value'] = {'type': 'sql', 'value': tree.getChild(0).getText()}
+    
+    def walk_LITERAL_DURATION(self, tree):
+        self.__currentVar['value'] = {'type': 'duration', 'value': tree.getChild(0).getText()}
+    
+    def walk_LITERAL_XML(self, tree):
+        self.__currentVar['value'] = {'type': 'xml', 'value':
+            tree.getChild(0).getText() + tree.getChild(1).getText() + tree.getChild(2).getText()}
+    
+    def walk_DOC_FOR(self, tree):
+        self.__currentVar['@desc'] = tree.getChild(1).getText()
     
     def walk_REQUEST(self, tree):
-        method = tree.getChild(0).getText()
-        path = tree.getChild(1).getChild(0).getText()
-        tree.deleteChild(0)
-        tree.deleteChild(0)
-        self.__requests.append(
-            {'method'    : method,
-             'path'      : path,
-             'statements': tree})
+        self.__currentRequest = {}
+        self.walk_tree(tree)
+        self.__requests.append(self.__currentRequest)
     
     def __getTokenName(self, node):
         """Return the node's type as a string."""
