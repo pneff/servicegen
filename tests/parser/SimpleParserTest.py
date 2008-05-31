@@ -215,6 +215,18 @@ class SimpleParserTest(unittest.TestCase):
         self.assertEqual(var.getChild(2).getChild(1).getText(), 'testing')
         self.assertEqual(var.getChild(2).getChild(2).getText(), '>')
     
+    def testXmlLiteralClosing(self):
+        """
+        Tests closing tag XML literal.
+        """
+        service = self._parseService("variable.txt")
+        root = service.tree
+        var = root.getChild(1).getChild(13)
+        self.assertEqual(var.getChild(2).getType(), parser.servicegenLexer.LITERAL_XML)
+        self.assertEqual(var.getChild(2).getChild(0).getText(), '</')
+        self.assertEqual(var.getChild(2).getChild(1).getText(), 'testing')
+        self.assertEqual(var.getChild(2).getChild(2).getText(), '>')
+    
     def testDurations(self):
         """Various durations."""
         service = self._parseService("variable.txt")

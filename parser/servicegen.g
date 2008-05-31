@@ -97,7 +97,8 @@ durationLiteral
     | IntLiteral 'years'   -> ^(DURATION_YEARS IntLiteral)
     ;
 xmlLiteral
-    : '<' ~'>'+ '>';
+    : '<' ~'>'+ '>'
+    | '</' ~'>'+ '>';
 
 functionCall
     :  IDENTIFIER '(' functionArgs? ')' -> ^(FUNCTION_CALL functionArgs)
