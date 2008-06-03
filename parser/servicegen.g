@@ -19,6 +19,8 @@ tokens {
     REQUEST;
     REQUEST_PATH;
     REQUEST_PATH_PARAM;
+    REQUEST_BODY;
+    REQUEST_OUTPUT;
     STATEMENT_VALIDATE;
     STATEMENT_OUTPUT;
     FUNCTION_CALL;
@@ -39,7 +41,7 @@ declaration
     :   service config? external* request*;
 service :   docStatement* 'service' IDENTIFIER STATEMENT_END -> ^(SERVICE IDENTIFIER docStatement*);
 config  :   'config' '{' (configVariableDefinition STATEMENT_END)* '}' -> ^(CONFIG configVariableDefinition*);
-request :   docStatement* HTTP_METHOD requestPath '{' requestBody '}' -> ^(REQUEST HTTP_METHOD requestPath requestBody docStatement*);
+request :   docStatement* HTTP_METHOD requestPath '{' requestBody requestOutput '}' -> ^(REQUEST HTTP_METHOD requestPath requestBody requestOutput docStatement*);
 external
     :   docStatement* 'external:' IDENTIFIER StringLiteral STATEMENT_END -> ^(EXTERNAL IDENTIFIER StringLiteral docStatement*);
 
@@ -115,7 +117,9 @@ requestPath
     : StringLiteral -> ^(REQUEST_PATH StringLiteral);
 
 requestBody
-    :   statement* outputDefinition*;
+    :   statement* -> ^(REQUEST_BODY statement*);
+requestOutput
+    :   outputDefinition* -> ^(REQUEST_OUTPUT outputDefinition*);
 statement
     : functionCall STATEMENT_END!
     | variableDefinition STATEMENT_END!
