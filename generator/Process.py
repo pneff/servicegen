@@ -9,10 +9,11 @@ class Process:
         self.__name = None
         self.__config = {}
         self.__requests = []
+        self.__variableContext = None
+        self.__currentVar = None
+        self.__stack = []
+        
         self.__getLexerSymbols()
-        self.__inConfig = False
-        self.__currentVar = {}
-        self.__currentRequest = {}
         self.walk(tree)
     
     def getName(self):
@@ -57,16 +58,17 @@ class Process:
     
     def walk_CONFIG(self, tree):
         # List of variables
-        self.__inConfig = True
+        self.__variableContext = self.__config
         self.walktree(tree)
-        self.__inConfig = False
+        self.__variableContext = None
     
     def walk_VARIABLE(self, tree):
         name = tree.getChild(1).getText()
-        self.__currentVar = {}
+        self.__stack.append(self.__currentVar)
+        self.__currentVar = {'docs': {'params': {}}}
         self.walktree(tree)
-        if self.__inConfig:
-            self.__config[name] = self.__currentVar
+        self.__variableContext[name] = self.__currentVar
+        self.__currentVar = self.__stack.pop()
     
     def walk_VARTYPE(self, tree):
         self.__currentVar['type'] = tree.getChild(0).getText()
@@ -91,12 +93,40 @@ class Process:
             tree.getChild(0).getText() + tree.getChild(1).getText() + tree.getChild(2).getText()}
     
     def walk_DOC_FOR(self, tree):
-        self.__currentVar['@desc'] = tree.getChild(1).getText()
+        self.__currentVar['docs']['params'][tree.getChild(0).getText()] = tree.getChild(1).getText()
+    
+    def walk_DOC(self, tree):
+        self.__currentVar['docs'][tree.getChild(0).getText()] = tree.getChild(1).getText()
     
     def walk_REQUEST(self, tree):
-        self.__currentRequest = {}
+        self.__currentVar = {
+            'docs': {'params': {}},
+            'vars': {},
+            'method': tree.getChild(0).getText(),
+            'output': {},
+        }
+        self.__variableContext = self.__currentVar['vars']
         self.walktree(tree)
-        self.__requests.append(self.__currentRequest)
+        self.__requests.append(self.__currentVar)
+        self.__variableContext = None
+        self.__currentVar = None
+    
+    def walk_REQUEST_PATH(self, tree):
+        self.__currentVar['path'] = tree.getChild(0).getText()
+    
+    def walk_STATEMENT_OUTPUT(self, tree):
+        self.__stack.append(self.__currentVar)
+        self.__currentVar = {'docs': {'params': {}}}
+        self.walktree(tree)
+        output_type = tree.getChild(0).getText()
+        output = self.__currentVar
+        self.__currentVar = self.__stack.pop()
+        self.__currentVar['output'][output_type] = output
+    
+    def walk_CACHE(self, tree):
+        self.__currentVar['cache'] = {
+            'value': tree.getChild(0).getChild(0).getText(),
+            'unit':  tree.getChild(0).getText()}
     
     def __getTokenName(self, node):
         """Return the node's type as a string."""

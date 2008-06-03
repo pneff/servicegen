@@ -12,7 +12,7 @@ service meteo;
 config {
     # database is the data type.
     # db is the variable name.
-    @param db "Database containing the weather information. Must have a table 'weather' with one entry per day."
+    @doc "Database containing the weather information. Must have a table 'weather' with one entry per day."
     database db;
 }
 
@@ -37,7 +37,7 @@ GET "/{zip}" {
     }
     
     # Defines output for CSV.
-    output.csv {
+    output.csv cached<1 day> {
         {weather}
     }
 }
