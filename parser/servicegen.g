@@ -108,7 +108,8 @@ functionArg
 
 /* Request */
 HTTP_METHOD
-    :   'GET' | 'POST' | 'PUT';
+    :   'OPTIONS' | 'GET' | 'HEAD' | 'POST' | 'PUT'
+    |   'DELETE' | 'TRACE' | 'CONNECT';
 
 requestPath
     : StringLiteral -> ^(REQUEST_PATH StringLiteral);
