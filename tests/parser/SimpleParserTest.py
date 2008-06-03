@@ -240,21 +240,6 @@ class SimpleParserTest(unittest.TestCase):
         self.assertEqual(request.getChild(10).getChild(1).getChild(0).getType(), parser.servicegenLexer.DURATION_HOURS)
         self.assertEqual(request.getChild(11).getChild(1).getChild(0).getType(), parser.servicegenLexer.DURATION_SECONDS)
     
-    def testSql(self):
-        """
-        Tests assignment of a variable which consists of an SQL query.
-        """
-        service = self._parseService("sql.txt")
-        root = service.tree
-        request = root.getChild(1)
-        self.assertEqual(request.getChild(2).getType(), parser.servicegenLexer.VARIABLE)
-        self.assertEqual(request.getChild(2).getChild(0).getType(), parser.servicegenLexer.VARTYPE)
-        self.assertEqual(request.getChild(2).getChild(0).getChild(0).getText(), 'records')
-        self.assertEqual(request.getChild(2).getChild(1).getType(), parser.servicegenLexer.IDENTIFIER)
-        self.assertEqual(request.getChild(2).getChild(1).getText(), 'weather')
-        self.assertEqual(request.getChild(2).getChild(2).getType(), parser.servicegenLexer.LITERAL_SQL)
-        self.assertEqual(request.getChild(2).getChild(2).getChild(0).getText(), 'SELECT * FROM weather WHERE zip={zip} ORDER BY date ASC')
-    
     def testOutput(self):
         """
         Tests parsing of output blocks. Currently everything inside the

@@ -119,17 +119,15 @@ keyword.
 
 A few example variables:
 
-  1. records weather = SELECT * FROM weather;
-  2. hash info = getInfo(zip);
-  3. hash cached<1 day> info2 = getInfo(zip);
-  4. int foo = 3;
+  1. hash info = getInfo(zip);
+  2. hash cached<1 day> info2 = getInfo(zip);
+  3. int foo = 3;
 
 Explanations:
 
-  1. Execute SQL against the first database defined in the config block.
-  2. Call function getInfo() from external include.
-  3. Result of the function is cached for 1 day.
-  4. Assign a number to the variable.
+  1. Call function getInfo() from external include.
+  2. Result of the function is cached for 1 day.
+  3. Assign a number to the variable.
 
 ### Caching
 
@@ -139,8 +137,7 @@ possible that the cache expires before that. Commonly this happens when
 maximum cache size limits have been reached.
 
 To determine the cache key, the service name, service version, variable name
-and the full command (including function parameters, complete SQL
-statement, etc.) are used as qualifiers.
+and the full command (including function parameters) are used as qualifiers.
 
 So in the above example the cached value would only be used if the value of
 'zip' is the same as an already cached version.
@@ -153,8 +150,6 @@ There are several kind of literals that can be used as values.
   - String: Starts and ends with double quotes.
   - Int: Any number.
   - Regexp: Starts and ends with a slash.
-  - SQL: Starts with 'SELECT' and runs until the end of the current statement
-    (usually the semicolon).
   - Duration: Starts with a number, followed by a duration word. The following
     durations are recognized: second, seconds, minute, minutes, hour, hours,
     day, days, month, months, year, years.
@@ -169,7 +164,6 @@ The following variable types are currently in use:
   - `string`: Corresponds to the String literal.
   - `int`: Corresponds to the Int literal.
   - `regexp`: Corresponds to the Regexp literal.
-  - `sql`: Corresponds to the SQL literal.
   - `dom`: An XML literal or an XML document.
   - `duration`: Corresponds to the Duration literal.
   - `database`: A database connection. Can currently only be defined in the
@@ -228,7 +222,6 @@ referenced as 'varname' in the output specification.
   - `string`: Output as is.
   - `int`: Output as is.
   - `regexp`: Output as is.
-  - `sql`: Executed and output the same way as `records`.
   - `duration`: Output as it was declared - in a human-readable form.
   - `dom`: Output verbatim, without any escaping.
   - `database`: Can't be output. Will be ignored, but a warning is logged.

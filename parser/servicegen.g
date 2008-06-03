@@ -14,7 +14,6 @@ tokens {
     LITERAL_STRING;
     LITERAL_INT;
     LITERAL_REGEXP;
-    LITERAL_SQL;
     LITERAL_DURATION;
     LITERAL_XML;
     REQUEST;
@@ -56,7 +55,7 @@ variableDefinition
 variableType
     :   variableTypeIdentifier -> ^(VARTYPE variableTypeIdentifier);
 variableTypeIdentifier
-    :   'string' | 'int' | 'regexp' | 'sql' | 'duration'
+    :   'string' | 'int' | 'regexp' | 'duration'
     |   'database' | 'service' | 'dom' | 'array' | 'hash'
     |   'records'
     ;
@@ -70,7 +69,6 @@ literal
     :   StringLiteral -> ^(LITERAL_STRING StringLiteral)
     |   IntLiteral -> ^(LITERAL_INT IntLiteral)
     |   RegexpLiteral -> ^(LITERAL_REGEXP RegexpLiteral)
-    |   SqlLiteral -> ^(LITERAL_SQL SqlLiteral)
     |   durationLiteral -> ^(LITERAL_DURATION durationLiteral)
     |   xmlLiteral -> ^(LITERAL_XML xmlLiteral)
     ;
@@ -80,8 +78,6 @@ IntLiteral
     :  DIGIT+;
 RegexpLiteral
     :  '/' ~'/'* '/';
-SqlLiteral
-    :  'SELECT' ~(STATEMENT_END)*;
 durationLiteral
     : IntLiteral 'second'  -> ^(DURATION_SECONDS IntLiteral)
     | IntLiteral 'seconds' -> ^(DURATION_SECONDS IntLiteral)
