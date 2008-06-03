@@ -39,8 +39,9 @@ class Process:
             self.lookup[value] = token
     
     def walktree(self, tree):
-        if node.getChildCount() > 0:
-            for i in range(node.getChildCount()):
+        children = tree.getChildCount()
+        if children > 0:
+            for i in range(children):
                 self.walk(tree.getChild(i))
     
     def walk(self, node):
@@ -48,7 +49,7 @@ class Process:
         if hasattr(self, method):
             getattr(self, method)(node)
         else:
-            self.walk_tree(node)
+            self.walktree(node)
     
     def walk_SERVICE(self, tree):
         serviceName = tree.getChild(0).getText()
@@ -57,13 +58,13 @@ class Process:
     def walk_CONFIG(self, tree):
         # List of variables
         self.__inConfig = True
-        self.walk_tree(tree)
+        self.walktree(tree)
         self.__inConfig = False
     
     def walk_VARIABLE(self, tree):
         name = tree.getChild(1).getText()
         self.__currentVar = {}
-        self.walk_tree(tree)
+        self.walktree(tree)
         if self.__inConfig:
             self.__config[name] = self.__currentVar
     
@@ -82,9 +83,6 @@ class Process:
     def walk_LITERAL_REGEXP(self, tree):
         self.__currentVar['value'] = {'type': 'regexp', 'value': tree.getChild(0).getText()}
     
-    def walk_LITERAL_SQL(self, tree):
-        self.__currentVar['value'] = {'type': 'sql', 'value': tree.getChild(0).getText()}
-    
     def walk_LITERAL_DURATION(self, tree):
         self.__currentVar['value'] = {'type': 'duration', 'value': tree.getChild(0).getText()}
     
@@ -97,7 +95,7 @@ class Process:
     
     def walk_REQUEST(self, tree):
         self.__currentRequest = {}
-        self.walk_tree(tree)
+        self.walktree(tree)
         self.__requests.append(self.__currentRequest)
     
     def __getTokenName(self, node):
