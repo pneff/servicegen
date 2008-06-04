@@ -7,9 +7,21 @@ SERVICENAME = "${servicename}"
 cfg = servicegen.init.getConfig(SERVICENAME)
 log = servicegen.init.getLogger(cfg, 'servicegen.' + SERVICENAME)
 
-urls = (
-    '/bla2/([^/]+)',  'Register',
-    '/bla/([^/]+)',  'Notify',
+urls = (<%
+    import re
+    # Get requests by path
+    my_requests = {}
+    for req in requests:
+        method = req['method']
+        path = req['path']
+        
+        # Normalize path to a regexp
+        path = re.sub('{[^}]+}', '[^/]+', path)
+        my_requests.setdefault(path, []).append((method, req['name']))
+    %>
+    % for path, request in my_requests.iteritems():
+    '${path}',  '${request[0][1]}',
+    % endfor
 )
 
 if __name__ == "__main__":

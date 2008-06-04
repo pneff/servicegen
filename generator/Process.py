@@ -104,6 +104,7 @@ class Process:
             'vars': {},
             'method': tree.getChild(0).getText(),
             'output': {},
+            'name': 'Request' + str(len(self.__requests))
         }
         self.__variableContext = self.__currentVar['vars']
         self.walktree(tree)
@@ -113,6 +114,9 @@ class Process:
     
     def walk_REQUEST_PATH(self, tree):
         self.__currentVar['path'] = tree.getChild(0).getText()
+    
+    def walk_REQUEST_NAME(self, tree):
+        self.__currentVar['name'] = tree.getChild(0).getText()
     
     def walk_STATEMENT_OUTPUT(self, tree):
         self.__stack.append(self.__currentVar)
