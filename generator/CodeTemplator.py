@@ -43,6 +43,7 @@ class CodeTemplator:
                                       servicename = self.process.getService()['name'],
                                       config      = self.process.getConfig(),
                                       requests    = self.process.getRequests(),
+                                      getValue    = self.getValue,
                                      )
                 f = open(targetpath, "w")
                 f.write(out)
@@ -50,3 +51,11 @@ class CodeTemplator:
             else:
                 print "Copying %s => %s" % (sourcepath, targetpath)
                 shutil.copyfile(sourcepath, targetpath)
+    
+    def getValue(self, value):
+        type = value['type']
+        val = value['value']
+        if type == 'string':
+            return '"' + val + '"'
+        else:
+            return value
