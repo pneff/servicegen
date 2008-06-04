@@ -96,6 +96,22 @@ class SimpleParserTest(unittest.TestCase):
         self.assertEqual(var.getChild(2).getType(), parser.servicegenLexer.LITERAL_INT)
         self.assertEqual(var.getChild(2).getChild(0).getText(), '10')
     
+    def testConfigInitializedStringEscaped(self):
+        """
+        Testing parsing of a string with embedded quotes
+        """
+        service = self._parseService("config.txt")
+        root = service.tree
+        config = root.getChild(1)
+        var = config.getChild(4)
+        self.assertEqual(var.getType(), parser.servicegenLexer.VARIABLE)
+        self.assertEqual(var.getChild(0).getType(), parser.servicegenLexer.VARTYPE)
+        self.assertEqual(var.getChild(0).getChild(0).getText(), 'string')
+        self.assertEqual(var.getChild(1).getType(), parser.servicegenLexer.IDENTIFIER)
+        self.assertEqual(var.getChild(1).getText(), 'escaped')
+        self.assertEqual(var.getChild(2).getType(), parser.servicegenLexer.LITERAL_STRING)
+        self.assertEqual(var.getChild(2).getChild(0).getText(), '"my\\"test var"')
+    
     def testConfig(self):
         """Tests parsing of a service with a configuration block.
         """

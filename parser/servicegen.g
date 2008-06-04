@@ -74,8 +74,10 @@ literal
     |   durationLiteral -> ^(LITERAL_DURATION durationLiteral)
     |   xmlLiteral -> ^(LITERAL_XML xmlLiteral)
     ;
+
 StringLiteral
-    :  '"' ~'"'* '"';
+    :  '"' ( EscapeSequence | ~('\\'|'"') )* '"';
+
 IntLiteral
     :  DIGIT+;
 RegexpLiteral
@@ -155,6 +157,10 @@ fragment
 LETTER  :   'a'..'z' | 'A'..'Z';
 fragment
 DIGIT   :   '0'..'9';
+
+fragment
+EscapeSequence
+    :   '\\' ('b'|'t'|'n'|'f'|'r'|'\"'|'\''|'\\');
 
 STATEMENT_END
     :   ';';

@@ -12,4 +12,7 @@ config {
     
     # Integer
     int stations = 10;
+    
+    # String variable with quotes
+    string escaped = "my\"test var";
 }
