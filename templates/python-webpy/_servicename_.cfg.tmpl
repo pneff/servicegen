@@ -1,3 +1,10 @@
+[${servicename}]
+%for key, cfg in config.iteritems():
+%    if cfg.has_key('value'):
+${key}: ${cfg['value']['value']}
+%    endif
+%endfor
+
 [logging]
 format: %%(name)s %%(asctime)s %%(levelname)-8s %%(message)s
 level: DEBUG
