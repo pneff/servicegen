@@ -1,6 +1,11 @@
 class debug:
+    __options = {}
+    
     def __init__(self, process):
         self.process = process
+    
+    def setOption(self, key, value):
+        self.__options[key] = value
     
     def write(self, outputdir):
         name = self.process.getService()['name']

@@ -1,0 +1,52 @@
+import os, os.path, shutil
+from mako.template import Template
+
+class CodeTemplator:
+    """
+    Walks a directory (set with the template option)
+    and generates code files from all templates. All
+    non-template files and directories are copied over
+    to the target directory.
+    """
+    __options = {}
+    __outdir = '/tmp/'
+    
+    def __init__(self, process):
+        self.process = process
+    
+    def setOption(self, key, value):
+        self.__options[key] = value
+    
+    def write(self, outputdir):
+        template = self.__options['template']
+        self.__outdir = outputdir
+        self.__serviceName = self.process.getService()['name']
+        
+        for root, dirs, files in os.walk(template):
+            path = root[len(template):]
+            self.__processFiles(path, files)
+    
+    def __processFiles(self, path, files):
+        for file in files:
+            is_template = (file.find('.tmpl') != -1)
+            basename = file.replace('.tmpl', '').replace("_servicename_", self.__serviceName)
+            targetdir = self.__outdir + path
+            targetpath = targetdir + '/' + basename
+            sourcepath = self.__options['template'] + path + '/' + file
+            if not os.path.exists(targetdir):
+                os.makedirs(targetdir)
+            
+            if is_template:
+                print "Processing template %s" % sourcepath
+                template = Template(filename=sourcepath)
+                out = template.render(service     = self.process.getService(),
+                                      servicename = self.process.getService()['name'],
+                                      config      = self.process.getConfig(),
+                                      requests    = self.process.getRequests(),
+                                     )
+                f = open(targetpath, "w")
+                f.write(out)
+                f.close()
+            else:
+                print "Copying %s => %s" % (sourcepath, targetpath)
+                shutil.copyfile(sourcepath, targetpath)

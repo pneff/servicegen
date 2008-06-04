@@ -3,6 +3,7 @@ from generator.Process import Process
 from generator.webpy import webpy
 from generator.debug import debug
 from generator.HtmlDoc import HtmlDoc
+from generator.CodeTemplator import CodeTemplator
 
 class Generator:
     def __init__(self, template, tree):
@@ -13,3 +14,6 @@ class Generator:
     
     def write(self, outputdir):
         self.generator.write(outputdir)
+    
+    def setOption(self, key, value):
+        self.generator.setOption(key, value)

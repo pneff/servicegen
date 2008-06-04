@@ -2,6 +2,8 @@ import copy, re
 
 class HtmlDoc:
     """Generates HTML documentation."""
+    
+    __options = {}
     START = """<html>
     <head><title>Service {SERVICE_NAME}</title></head>
     <body>
@@ -11,6 +13,9 @@ class HtmlDoc:
     
     def __init__(self, process):
         self.process = process
+
+    def setOption(self, key, value):
+        self.__options[key] = value
     
     def write(self, outputdir):
         f = open(outputdir + "/index.html", "w")
@@ -57,7 +62,6 @@ class HtmlDoc:
             f.write('<tr><td>%s</td><td><a href="%s">%s</a><br />%s</td></tr>' %
                 (req['method'], '#req' + self.__makeId(req['method'] + '_' + req['path']),
                  req['path'], doc))
-            print req
         f.write('</table><hr />')
     
     def __writeRequestsDetails(self, f):
