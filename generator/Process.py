@@ -6,7 +6,7 @@ class Process:
     Class to process the service to a more readily accessible format.
     """
     def __init__(self, tree):
-        self.__name = None
+        self.__service = {}
         self.__config = {}
         self.__requests = []
         self.__variableContext = None
@@ -16,9 +16,9 @@ class Process:
         self.__getLexerSymbols()
         self.walk(tree)
     
-    def getName(self):
-        """Returns the service name as a string."""
-        return self.__name
+    def getService(self):
+        """Returns the service as a hash."""
+        return self.__service
     
     def getConfig(self):
         """Returns the configured variables as a hash."""
@@ -53,8 +53,10 @@ class Process:
             self.walktree(node)
     
     def walk_SERVICE(self, tree):
-        serviceName = tree.getChild(0).getText()
-        self.__name = serviceName
+        self.__service = {'docs': {'params': {}},
+                          'name': tree.getChild(0).getText()}
+        self.__currentVar = self.__service
+        self.walktree(tree)
     
     def walk_CONFIG(self, tree):
         # List of variables
@@ -66,15 +68,13 @@ class Process:
         name = tree.getChild(1).getText()
         self.__stack.append(self.__currentVar)
         self.__currentVar = {'docs': {'params': {}}}
+        self.__currentVar['name'] = tree.getChild(1).getText()
         self.walktree(tree)
         self.__variableContext[name] = self.__currentVar
         self.__currentVar = self.__stack.pop()
     
     def walk_VARTYPE(self, tree):
         self.__currentVar['type'] = tree.getChild(0).getText()
-    
-    def walk_VARREF(self, tree):
-        self.__currentVar['name'] = tree.getChild(0).getText()
     
     def walk_LITERAL_STRING(self, tree):
         self.__currentVar['value'] = {'type': 'string', 'value': tree.getChild(0).getText()}

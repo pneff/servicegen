@@ -10,6 +10,8 @@ def main():
     tree = service.parse(filename)
     gen = Generator("debug", tree.tree)
     gen.write("out")
+    gen = Generator("HtmlDoc", tree.tree)
+    gen.write("out")
 
 if __name__ == "__main__":
     main()

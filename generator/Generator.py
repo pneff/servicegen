@@ -2,6 +2,7 @@ import sys
 from generator.Process import Process
 from generator.webpy import webpy
 from generator.debug import debug
+from generator.HtmlDoc import HtmlDoc
 
 class Generator:
     def __init__(self, template, tree):
