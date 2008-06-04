@@ -76,7 +76,20 @@ literal
     ;
 
 StringLiteral
-    :  '"' ( EscapeSequence | ~('\\'|'"') )* '"';
+    :  '"' ( EscapeSequence | ~('\\'|'"') )* '"'
+       { 
+           str = self.getText()[1:-1]
+           str = str.replace("\\b", "\b")
+           str = str.replace("\\f", "\f")
+           str = str.replace("\\n", "\n")
+           str = str.replace("\\r", "\r")
+           str = str.replace("\\t", "\t")
+           str = str.replace("\\'", "'")
+           str = str.replace("\\\"", "\"")
+           str = str.replace("\\\\", "\\")
+           self.setText(str)
+       }
+    ;
 
 IntLiteral
     :  DIGIT+;
