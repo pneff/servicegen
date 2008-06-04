@@ -17,8 +17,8 @@ tokens {
     LITERAL_DURATION;
     LITERAL_XML;
     REQUEST;
+    REQUEST_NAME;
     REQUEST_PATH;
-    REQUEST_PATH_PARAM;
     REQUEST_BODY;
     REQUEST_OUTPUT;
     STATEMENT_VALIDATE;
@@ -41,7 +41,8 @@ declaration
     :   service config? external* request*;
 service :   docStatement* 'service' IDENTIFIER STATEMENT_END -> ^(SERVICE IDENTIFIER docStatement*);
 config  :   'config' '{' (configVariableDefinition STATEMENT_END)* '}' -> ^(CONFIG configVariableDefinition*);
-request :   docStatement* HTTP_METHOD requestPath '{' requestBody requestOutput '}' -> ^(REQUEST HTTP_METHOD requestPath requestBody requestOutput docStatement*);
+request :   docStatement* requestName? HTTP_METHOD requestPath '{' requestBody requestOutput '}'
+            -> ^(REQUEST HTTP_METHOD requestPath requestBody requestOutput requestName? docStatement*);
 external
     :   docStatement* 'external:' IDENTIFIER StringLiteral STATEMENT_END -> ^(EXTERNAL IDENTIFIER StringLiteral docStatement*);
 
@@ -130,7 +131,8 @@ HTTP_METHOD
 
 requestPath
     : StringLiteral -> ^(REQUEST_PATH StringLiteral);
-
+requestName
+    : IDENTIFIER ':' -> ^(REQUEST_NAME IDENTIFIER);
 requestBody
     :   statement* -> ^(REQUEST_BODY statement*);
 requestOutput

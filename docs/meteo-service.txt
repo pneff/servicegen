@@ -18,7 +18,7 @@ config {
 
 @doc       "Returns all available forecasts for a ZIP code in Switzerland."
 @param zip "ZIP code for which to get weather forecast"
-GET "/{zip}" {
+GetForecasts: GET "/{zip}" {
     validate zip, /[0-9]{4}/;
     
     # Defines the variable data. SELECT statements are automatically

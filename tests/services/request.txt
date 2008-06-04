@@ -6,3 +6,7 @@ service meteo;
 GET "/testing/this/path" {
     
 }
+
+SaveSomething: POST "/anotherpath" {
+    
+}

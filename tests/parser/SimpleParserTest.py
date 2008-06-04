@@ -159,6 +159,21 @@ class SimpleParserTest(unittest.TestCase):
         self.assertEqual(request.getChild(1).getType(), parser.servicegenLexer.REQUEST_PATH)
         self.assertEqual(request.getChild(1).getChild(0).getText(), '/testing/this/path')
     
+    def testRequestName(self):
+        """
+        Tests parsing of a request with a name.
+        """
+        service = self._parseService("request.txt")
+        root = service.tree
+        request = root.getChild(2)
+        self.assertEqual(request.getType(), parser.servicegenLexer.REQUEST)
+        self.assertEqual(request.getChild(0).getType(), parser.servicegenLexer.HTTP_METHOD)
+        self.assertEqual(request.getChild(0).getText(), 'POST')
+        self.assertEqual(request.getChild(1).getType(), parser.servicegenLexer.REQUEST_PATH)
+        self.assertEqual(request.getChild(1).getChild(0).getText(), '/anotherpath')
+        self.assertEqual(request.getChild(4).getType(), parser.servicegenLexer.REQUEST_NAME)
+        self.assertEqual(request.getChild(4).getChild(0).getText(), 'SaveSomething')
+    
     def testVariable(self):
         """
         Tests parsing of a service with one defined request which takes
