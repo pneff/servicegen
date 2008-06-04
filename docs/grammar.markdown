@@ -82,9 +82,10 @@ target.
 
 ### Definition
 
-A request block is defined by the a HTTP verb and path. The body of the
-request block is executed if the verb/path combination matches the incoming
-request. The path can contain variable definitions in curly brackets.
+A request block is defined by the an optional request name, a HTTP verb and
+path. The body of the request block is executed if the verb/path combination
+matches the incoming request. The path can contain variable definitions in
+curly brackets.
 
 Example:
 
@@ -92,8 +93,17 @@ Example:
         # .....
     }
 
+Alternatively you can say:
+
+    GetForecast: GET "/{zip}" {
+        # .....
+    }
+
 This declares a commend, which will match every GET request with one path
 component. The path component is assigned to the variable called 'zip'.
+
+In the second example the request is assigned the name "GetForecast" which is
+useful for documentation and in the code generation phase.
 
 A few example requests:
 
