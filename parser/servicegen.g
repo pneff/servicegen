@@ -115,8 +115,8 @@ xmlLiteral
     | '</' ~'>'+ '>';
 
 functionCall
-    :  IDENTIFIER '(' functionArgs? ')' -> ^(FUNCTION_CALL functionArgs)
-    |  IDENTIFIER functionArgs?         -> ^(FUNCTION_CALL functionArgs)
+    :  IDENTIFIER '(' functionArgs? ')' -> ^(FUNCTION_CALL IDENTIFIER functionArgs)
+    |  IDENTIFIER functionArgs?         -> ^(FUNCTION_CALL IDENTIFIER functionArgs)
     ;
 functionArgs
     :  functionArg (','! functionArg)*;

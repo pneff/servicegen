@@ -196,10 +196,11 @@ class SimpleParserTest(unittest.TestCase):
         root = service.tree
         validate = root.getChild(1).getChild(2).getChild(0)
         self.assertEqual(validate.getType(), parser.servicegenLexer.FUNCTION_CALL)
-        self.assertEqual(validate.getChild(0).getType(), parser.servicegenLexer.VARREF)
-        self.assertEqual(validate.getChild(0).getChild(0).getText(), 'zip')
-        self.assertEqual(validate.getChild(1).getType(), parser.servicegenLexer.LITERAL_REGEXP)
-        self.assertEqual(validate.getChild(1).getChild(0).getText(), '/[0-9]{4}/')
+        self.assertEqual(validate.getChild(0).getText(), 'validate')
+        self.assertEqual(validate.getChild(1).getType(), parser.servicegenLexer.VARREF)
+        self.assertEqual(validate.getChild(1).getChild(0).getText(), 'zip')
+        self.assertEqual(validate.getChild(2).getType(), parser.servicegenLexer.LITERAL_REGEXP)
+        self.assertEqual(validate.getChild(2).getChild(0).getText(), '/[0-9]{4}/')
     
     def testVariableAssignment(self):
         """
@@ -326,14 +327,15 @@ class SimpleParserTest(unittest.TestCase):
         self.assertEqual(var.getChild(1).getType(), parser.servicegenLexer.IDENTIFIER)
         self.assertEqual(var.getChild(1).getText(), 'stations')
         self.assertEqual(var.getChild(2).getType(), parser.servicegenLexer.FUNCTION_CALL)
-        self.assertEqual(var.getChild(2).getChild(0).getType(), parser.servicegenLexer.VARREF)
-        self.assertEqual(var.getChild(2).getChild(0).getChild(0).getText(), 'locations')
-        self.assertEqual(var.getChild(2).getChild(1).getType(), parser.servicegenLexer.LITERAL_STRING)
-        self.assertEqual(var.getChild(2).getChild(1).getChild(0).getText(), 'stations')
-        self.assertEqual(var.getChild(2).getChild(2).getType(), parser.servicegenLexer.VARREF)
-        self.assertEqual(var.getChild(2).getChild(2).getChild(0).getText(), 'x')
+        self.assertEqual(var.getChild(2).getChild(0).getText(), 'getStations')
+        self.assertEqual(var.getChild(2).getChild(1).getType(), parser.servicegenLexer.VARREF)
+        self.assertEqual(var.getChild(2).getChild(1).getChild(0).getText(), 'locations')
+        self.assertEqual(var.getChild(2).getChild(2).getType(), parser.servicegenLexer.LITERAL_STRING)
+        self.assertEqual(var.getChild(2).getChild(2).getChild(0).getText(), 'stations')
         self.assertEqual(var.getChild(2).getChild(3).getType(), parser.servicegenLexer.VARREF)
-        self.assertEqual(var.getChild(2).getChild(3).getChild(0).getText(), 'y')
+        self.assertEqual(var.getChild(2).getChild(3).getChild(0).getText(), 'x')
+        self.assertEqual(var.getChild(2).getChild(4).getType(), parser.servicegenLexer.VARREF)
+        self.assertEqual(var.getChild(2).getChild(4).getChild(0).getText(), 'y')
     
     def testExternal(self):
         """
