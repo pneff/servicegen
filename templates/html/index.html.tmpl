@@ -1,0 +1,79 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+   "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en">
+    <%def name="docTable(docs)">
+        % if docs.has_key('doc'):
+            <p>${docs['doc']}</p>
+            <% del docs['doc'] %>
+        % endif
+        % if docs.has_key('params') and len(docs['params']) > 0:
+            <h4>Parameters</h4>
+            <dl>
+            % for key, value in docs['params'].iteritems():
+                <dt>${key}</dt>
+                <dd>${value}</dd>
+            % endfor
+            </dl>
+        % endif
+        <% del docs['params'] %>
+        % if len(docs) > 0:
+            <dl>
+            % for key, value in docs.iteritems():
+                <dt>${key}</dt>
+                <dd>${value}</dd>
+            % endfor
+            </dl>
+        % endif
+    </%def>
+    
+    <%def name="makeRequestId(req)"><%
+        import re
+        str = 'req' + req['method'] + '_' + req['path']
+        return re.sub('[^a-zA-Z0-9_]', '_', str)
+        %>
+    </%def>
+    
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <title>Service ${servicename}</title>
+    </head>
+    <body>
+        <h1>${servicename}</h1>
+        ${docTable(service['docs'])}
+        <hr />
+        
+        <h2>Configuration</h2>
+        <p>These variables can be changed using the external config file.</p>
+        % for key, value in config.items():
+            <h3><em class="type">${value['type']}</em> ${key}</h3>
+            ${docTable(value['docs'])}
+        % endfor
+        <hr />
+        
+        <h2>Requests</h2>
+        <h3>Summary</h3>
+        <table class="requests">
+            % for req in requests:
+                <tr>
+                    <td class="method">${req['method']}</td>
+                    <td>
+                        <a href="#${makeRequestId(req)}">
+                            ${req['path']}
+                        </a>
+                        <br />
+                        ${req['docs'].has_key('doc') and req['docs']['doc'] or ''}
+                    </td>
+                </tr>
+            % endfor
+        </table>
+        <hr />
+        
+        % for req in requests:
+            <h3 id="${makeRequestId(req)}">
+                <em class="method">${req['method']}</em>
+                ${req['path']}
+            </h3>
+            ${docTable(req['docs'])}
+        % endfor
+    </body>
+</html>

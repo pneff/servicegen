@@ -9,11 +9,15 @@ def main():
     print "Converting %(filename)s" % locals()
     tree = service.parse(filename)
     # Generator("debug", tree.tree).write("out")
-    Generator("HtmlDoc", tree.tree).write("out")
     
     gen = Generator("CodeTemplator", tree.tree)
     gen.setOption("template", "templates/python-webpy")
     gen.write("out/webpy")
+
+    gen = Generator("CodeTemplator", tree.tree)
+    gen.setOption("template", "templates/html")
+    gen.write("out/html")
+
 
 if __name__ == "__main__":
     main()
