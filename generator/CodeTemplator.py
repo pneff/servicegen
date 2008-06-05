@@ -36,7 +36,25 @@ class CodeTemplator:
             if not os.path.exists(targetdir):
                 os.makedirs(targetdir)
             
-            if is_template:
+            if is_template and file.find("_request_") > -1:
+                # Once for each request
+                print "Processing template %s" % sourcepath
+                template = Template(filename=sourcepath)
+                for req in self.process.getRequests():
+                    print "  - Request: %s" % req['name']
+                    out = template.render(service     = self.process.getService(),
+                                          servicename = self.process.getService()['name'],
+                                          config      = self.process.getConfig(),
+                                          requests    = self.process.getRequests(),
+                                          req         = req,
+                                          getValue    = self.getValue,
+                                         )
+                    targetpath = targetpath.replace("_request_", req['name'])
+                    f = open(targetpath, "w")
+                    f.write(out)
+                    f.close()
+                
+            elif is_template:
                 print "Processing template %s" % sourcepath
                 template = Template(filename=sourcepath)
                 out = template.render(service     = self.process.getService(),
