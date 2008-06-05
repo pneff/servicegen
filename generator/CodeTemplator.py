@@ -39,38 +39,32 @@ class CodeTemplator:
             if is_template and file.find("_request_") > -1:
                 # Once for each request
                 print "Processing template %s" % sourcepath
-                template = Template(filename=sourcepath)
                 for req in self.process.getRequests():
                     print "  - Request: %s" % req['name']
-                    out = template.render(service     = self.process.getService(),
-                                          servicename = self.process.getService()['name'],
-                                          config      = self.process.getConfig(),
-                                          requests    = self.process.getRequests(),
-                                          req         = req,
-                                          getValue    = self.getValue,
-                                         )
-                    targetpath = targetpath.replace("_request_", req['name'])
-                    f = open(targetpath, "w")
-                    f.write(out)
-                    f.close()
-                
+                    self.render(sourcepath, targetpath, req=req)
             elif is_template:
                 print "Processing template %s" % sourcepath
-                template = Template(filename=sourcepath)
-                out = template.render(service     = self.process.getService(),
-                                      servicename = self.process.getService()['name'],
-                                      config      = self.process.getConfig(),
-                                      requests    = self.process.getRequests(),
-                                      getValue    = self.getValue,
-                                     )
-                f = open(targetpath, "w")
-                f.write(out)
-                f.close()
+                self.render(sourcepath, targetpath)
             else:
                 print "Copying %s => %s" % (sourcepath, targetpath)
                 shutil.copyfile(sourcepath, targetpath)
     
+    def render(self, template, targetpath, **data):
+        template = Template(filename=template)
+        data_def = {'service'    : self.process.getService(),
+                    'servicename': self.process.getService()['name'],
+                    'config'     : self.process.getConfig(),
+                    'requests'   : self.process.getRequests(),
+                    'getValue'   : self.getValue,
+                   }
+        data_def.update(data)
+        out = template.render(**data_def)
+        f = open(targetpath, "w")
+        f.write(out)
+        f.close()
+
     def getValue(self, value):
+        """Returns the value in the target language."""
         type = value['type']
         val = value['value']
         if type == 'string':
