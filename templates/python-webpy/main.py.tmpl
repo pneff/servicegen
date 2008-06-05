@@ -1,24 +1,28 @@
-#!/usr/bin/env python
+<%
+import re
+# Get requests by path
+my_requests = {}
+for req in requests:
+    method = req['method']
+    path = req['path']
+    
+    # Normalize path to a regexp
+    path = re.sub('{[^}]+}', '[^/]+', path)
+    my_requests.setdefault(path, []).append((method, req['name']))
+
+%>#!/usr/bin/env python
 import web
 import servicegen.init
+% for request in my_requests.values():
+from ${servicename}.${request[0][1]} import ${request[0][1]}
+% endfor
 
 SERVICENAME = "${servicename}"
 
 cfg = servicegen.init.getConfig(SERVICENAME)
 log = servicegen.init.getLogger(cfg, 'servicegen.' + SERVICENAME)
 
-urls = (<%
-    import re
-    # Get requests by path
-    my_requests = {}
-    for req in requests:
-        method = req['method']
-        path = req['path']
-        
-        # Normalize path to a regexp
-        path = re.sub('{[^}]+}', '[^/]+', path)
-        my_requests.setdefault(path, []).append((method, req['name']))
-    %>
+urls = (
     % for path, request in my_requests.iteritems():
     '${path}',  '${request[0][1]}',
     % endfor
