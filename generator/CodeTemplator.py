@@ -29,8 +29,8 @@ class CodeTemplator:
     def __processFiles(self, path, files):
         for file in files:
             is_template = (file.find('.tmpl') != -1)
-            basename = file.replace('.tmpl', '').replace("_servicename_", self.__serviceName)
-            targetdir = self.__outdir + path
+            basename = self.__fileSubstitute(file.replace('.tmpl', ''))
+            targetdir = self.__fileSubstitute(self.__outdir + path)
             targetpath = targetdir + '/' + basename
             sourcepath = self.__options['template'] + path + '/' + file
             if not os.path.exists(targetdir):
@@ -59,3 +59,6 @@ class CodeTemplator:
             return '"' + val + '"'
         else:
             return value
+    
+    def __fileSubstitute(self, path):
+        return path.replace("_servicename_", self.__serviceName)
