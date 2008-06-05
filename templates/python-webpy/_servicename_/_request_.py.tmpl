@@ -1,4 +1,5 @@
 <%
+from tools.Service import DumpTree
 import re
 # Get requests by path
 my_requests = {}
@@ -20,14 +21,30 @@ req_path_params = ", ".join(map(lambda param: param[1:-1], req_path_params))
 my_requests = my_requests[req_path]
 methods = [request for request in my_requests]
 
+def getStmValue(stm):
+    return getValue({
+        'value': stm.getChild(0).getText(),
+        'type': stm.getText()})
+
+def function_params(statement):
+    params = [getStmValue(statement.getChild(i))
+              for i in range(1, statement.getChildCount())]
+    return ', '.join(params)
+
+def statement_to_python(stm):
+    if stm.getText() == 'FUNCTION_CALL':
+        return stm.getChild(0).getText() + '(' + function_params(stm) + ')'
+    elif stm.getText() == 'VARIABLE':
+        return stm.getChild(1).getText() + ' = ' + getStmValue(stm.getChild(2))
+    else:
+        DumpTree(stm)
+        return 'Unhandled statement: ' + stm.getText()
 
 %>class ${req['name']}:
   % for method in methods:
     <% method_name, method_req = method %>
     def ${method_name}(${req_path_params}):
-      % for varname, var in method_req['vars'].iteritems():
-        # ${var['type']}
-        ${var['name']} = ${getValue(var['value'])}
-      % endfor
-    
+      %for stm in req['statements']:
+        ${statement_to_python(stm)}
+      %endfor
   % endfor

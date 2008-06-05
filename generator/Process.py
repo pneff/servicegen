@@ -118,6 +118,12 @@ class Process:
     def walk_REQUEST_NAME(self, tree):
         self.__currentVar['name'] = tree.getChild(0).getText()
     
+    def walk_REQUEST_BODY(self, tree):
+        self.__currentVar['statements'] = []
+        children = tree.getChildCount()
+        for i in range(children):
+            self.__currentVar['statements'].append(tree.getChild(i))
+    
     def walk_STATEMENT_OUTPUT(self, tree):
         self.__stack.append(self.__currentVar)
         self.__currentVar = {'docs': {'params': {}}}

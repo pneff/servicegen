@@ -41,7 +41,8 @@ class CodeTemplator:
                 print "Processing template %s" % sourcepath
                 for req in self.process.getRequests():
                     print "  - Request: %s" % req['name']
-                    self.render(sourcepath, targetpath, req=req)
+                    self.render(sourcepath, targetpath.replace("_request_", req['name']),
+                                req=req)
             elif is_template:
                 print "Processing template %s" % sourcepath
                 self.render(sourcepath, targetpath)
@@ -62,15 +63,20 @@ class CodeTemplator:
         f = open(targetpath, "w")
         f.write(out)
         f.close()
-
+    
     def getValue(self, value):
         """Returns the value in the target language."""
         type = value['type']
         val = value['value']
-        if type == 'string':
+        if type == 'string' or type == 'LITERAL_STRING':
             return '"' + val + '"'
+        elif type == 'VARREF':
+            return val
+        elif type == 'LITERAL_REGEXP':
+            return 're.compile(\'^' + val[1:-1] + '$\')'
         else:
-            return value
+            print "Unhandled type in getValue: %s" % type
+            return val
     
     def __fileSubstitute(self, path):
         return path.replace("_servicename_", self.__serviceName)
