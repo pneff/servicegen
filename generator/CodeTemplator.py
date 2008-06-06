@@ -68,7 +68,7 @@ class CodeTemplator:
         """Returns the value in the target language."""
         type = value['type']
         val = value['value']
-        if type == 'string' or type == 'LITERAL_STRING':
+        if type == 'string' or type == 'LITERAL_STRING' or type == 'LITERAL_XML':
             return '"' + val + '"'
         elif type == 'VARREF':
             return val

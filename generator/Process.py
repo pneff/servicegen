@@ -130,6 +130,14 @@ class Process:
         self.walktree(tree)
         output_type = tree.getChild(0).getText()
         output = self.__currentVar
+        
+        children = tree.getChildCount()
+        ignoredTypes = [parser.servicegenParser.CACHE, parser.servicegenParser.DOC]
+        output['statements'] = []
+        for i in range(1, children):
+            if not tree.getChild(i).getType() in ignoredTypes:
+                output['statements'].append(tree.getChild(i))
+        
         self.__currentVar = self.__stack.pop()
         self.__currentVar['output'][output_type] = output
     

@@ -22,8 +22,11 @@ my_requests = my_requests[req_path]
 methods = [request for request in my_requests]
 
 def getStmValue(stm):
+    value = ''
+    for i in range(stm.getChildCount()):
+        value += stm.getChild(i).getText()
     return getValue({
-        'value': stm.getChild(0).getText(),
+        'value': value,
         'type': stm.getText()})
 
 def function_params(statement):
@@ -86,9 +89,9 @@ class ${req['name']}:
             %>
             %if cacheDuration > 0:
             ${identifier} = servicegen.function.get_cache('${cacheKey}')
-            if ${identifier} != None:
-                 ${identifier} = ${value}
-                 servicegen.function.set_cache('${cacheKey}', ${identifier})
+            if ${identifier} == None:
+                ${identifier} = ${value}
+                servicegen.function.set_cache('${cacheKey}', ${identifier})
             %else:
             ${identifier} = ${value}
             %endif
@@ -96,10 +99,12 @@ class ${req['name']}:
           %endfor
             
             __output_type = servicegen.output.best_of(${req['output'].keys()})
-            
+            servicegen.output.header(__output_type)
           %for out_type, out in req['output'].iteritems():
             if __output_type == '${out_type}':
-                print "Outputting ${out_type}"
+              %for out_statement in out['statements']:
+                servicegen.output.write('${out_type}', '${out_statement}', ${getStmValue(out_statement)})
+              %endfor
             
           %endfor
         

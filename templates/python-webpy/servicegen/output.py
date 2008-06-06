@@ -20,3 +20,10 @@ def best_of(types):
     
     # Return first entry (to be changed)
     return types[0]
+
+def write(out_type, value_type, value):
+    if out_type == 'xml':
+        if value_type == 'LITERAL_XML':
+            web.output(value)
+        else:
+            web.output(escape(value))
