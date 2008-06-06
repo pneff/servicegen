@@ -99,18 +99,29 @@ Alternatively you can say:
         # .....
     }
 
-This declares a commend, which will match every GET request with one path
+This declares a command, which will match every GET request with one path
 component. The path component is assigned to the variable called 'zip'.
 
 In the second example the request is assigned the name "GetForecast" which is
 useful for documentation and in the code generation phase.
 
-A few example requests:
+A few example requests for this example path:
 
   - `GET /9000` - matches, zip=9000
   - `GET /foo` - matches, zip=foo
   - `GET /` - does not match, no argument given
   - `GET /foo/bar` - does not match, contains two path components
+
+POST parameters can be declared with the arrow syntax:
+
+    PUT "/user/{uid}" -> (key, value) {
+        # the POST params `key', `value' are accessible
+        # in the same way as `uid'
+    }
+
+    PUT "/user/{uid}" -> (xml*) {
+        # The whole request body is available under `xml'
+    }
 
 
 ### Body

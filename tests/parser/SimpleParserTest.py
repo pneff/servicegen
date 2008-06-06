@@ -171,8 +171,8 @@ class SimpleParserTest(unittest.TestCase):
         self.assertEqual(request.getChild(0).getText(), 'POST')
         self.assertEqual(request.getChild(1).getType(), parser.servicegenLexer.REQUEST_PATH)
         self.assertEqual(request.getChild(1).getChild(0).getText(), '/anotherpath')
-        self.assertEqual(request.getChild(4).getType(), parser.servicegenLexer.REQUEST_NAME)
-        self.assertEqual(request.getChild(4).getChild(0).getText(), 'SaveSomething')
+        self.assertEqual(request.getChild(5).getType(), parser.servicegenLexer.REQUEST_NAME)
+        self.assertEqual(request.getChild(5).getChild(0).getText(), 'SaveSomething')
     
     def testVariable(self):
         """
@@ -194,7 +194,7 @@ class SimpleParserTest(unittest.TestCase):
         """
         service = self._parseService("variable.txt")
         root = service.tree
-        validate = root.getChild(1).getChild(2).getChild(0)
+        validate = root.getChild(1).getChild(3).getChild(0)
         self.assertEqual(validate.getType(), parser.servicegenLexer.FUNCTION_CALL)
         self.assertEqual(validate.getChild(0).getType(), parser.servicegenLexer.FUNCTION_NAME_BUILTIN)
         self.assertEqual(validate.getChild(0).getChild(0).getText(), 'validate')
@@ -209,7 +209,7 @@ class SimpleParserTest(unittest.TestCase):
         """
         service = self._parseService("variable.txt")
         root = service.tree
-        variable = root.getChild(1).getChild(2).getChild(1)
+        variable = root.getChild(1).getChild(3).getChild(1)
         self.assertEqual(variable.getType(), parser.servicegenLexer.VARIABLE)
         self.assertEqual(variable.getChild(0).getType(), parser.servicegenLexer.VARTYPE)
         self.assertEqual(variable.getChild(0).getChild(0).getText(), 'string')
@@ -224,7 +224,7 @@ class SimpleParserTest(unittest.TestCase):
         """
         service = self._parseService("variable.txt")
         root = service.tree
-        var = root.getChild(1).getChild(2).getChild(2)
+        var = root.getChild(1).getChild(3).getChild(2)
         self.assertEqual(var.getType(), parser.servicegenLexer.VARIABLE)
         self.assertEqual(var.getChild(0).getType(), parser.servicegenLexer.VARTYPE)
         self.assertEqual(var.getChild(0).getChild(0).getText(), 'int')
@@ -242,7 +242,7 @@ class SimpleParserTest(unittest.TestCase):
         """
         service = self._parseService("variable.txt")
         root = service.tree
-        var = root.getChild(1).getChild(2).getChild(10)
+        var = root.getChild(1).getChild(3).getChild(10)
         self.assertEqual(var.getChild(2).getType(), parser.servicegenLexer.LITERAL_XML)
         self.assertEqual(var.getChild(2).getChild(0).getText(), '<')
         self.assertEqual(var.getChild(2).getChild(1).getText(), 'testing')
@@ -254,7 +254,7 @@ class SimpleParserTest(unittest.TestCase):
         """
         service = self._parseService("variable.txt")
         root = service.tree
-        var = root.getChild(1).getChild(2).getChild(11)
+        var = root.getChild(1).getChild(3).getChild(11)
         self.assertEqual(var.getChild(2).getType(), parser.servicegenLexer.LITERAL_XML)
         self.assertEqual(var.getChild(2).getChild(0).getText(), '</')
         self.assertEqual(var.getChild(2).getChild(1).getText(), 'testing')
@@ -264,7 +264,7 @@ class SimpleParserTest(unittest.TestCase):
         """Various durations."""
         service = self._parseService("variable.txt")
         root = service.tree
-        request = root.getChild(1).getChild(2)
+        request = root.getChild(1).getChild(3)
         self.assertEqual(request.getChild(3).getChild(1).getChild(0).getType(), parser.servicegenLexer.DURATION_MINUTES)
         self.assertEqual(request.getChild(4).getChild(1).getChild(0).getType(), parser.servicegenLexer.DURATION_HOURS)
         self.assertEqual(request.getChild(5).getChild(1).getChild(0).getType(), parser.servicegenLexer.DURATION_SECONDS)
@@ -280,7 +280,7 @@ class SimpleParserTest(unittest.TestCase):
         """
         service = self._parseService("output.txt")
         root = service.tree
-        output = service.tree.getChild(2).getChild(3).getChild(0)
+        output = service.tree.getChild(2).getChild(4).getChild(0)
         self.assertEqual(output.getType(), parser.servicegenLexer.STATEMENT_OUTPUT)
         self.assertEqual(output.getChild(0).getText(), 'xml')
     
@@ -290,7 +290,7 @@ class SimpleParserTest(unittest.TestCase):
         """
         service = self._parseService("output.txt")
         root = service.tree
-        var = root.getChild(1).getChild(3).getChild(0).getChild(1)
+        var = root.getChild(1).getChild(4).getChild(0).getChild(1)
         self.assertEqual(var.getType(), parser.servicegenLexer.VARREF)
         self.assertEqual(var.getChild(0).getText(), 'zip')
     
@@ -300,7 +300,7 @@ class SimpleParserTest(unittest.TestCase):
         """
         service = self._parseService("output.txt")
         root = service.tree
-        literal = root.getChild(1).getChild(3).getChild(0).getChild(2)
+        literal = root.getChild(1).getChild(4).getChild(0).getChild(2)
         self.assertEqual(literal.getType(), parser.servicegenLexer.LITERAL_STRING)
         self.assertEqual(literal.getChild(0).getText(), '<ml>this is my string</ml>')
     
@@ -309,7 +309,7 @@ class SimpleParserTest(unittest.TestCase):
         Tests cache of an output block.
         """
         service = self._parseService("output.txt")
-        output = service.tree.getChild(2).getChild(3).getChild(0)
+        output = service.tree.getChild(2).getChild(4).getChild(0)
         self.assertEqual(output.getType(), parser.servicegenLexer.STATEMENT_OUTPUT)
         self.assertEqual(output.getChild(1).getType(), parser.servicegenLexer.CACHE)
         self.assertEqual(output.getChild(1).getChild(0).getType(), parser.servicegenLexer.DURATION_MONTHS)
@@ -321,7 +321,7 @@ class SimpleParserTest(unittest.TestCase):
         """
         service = self._parseService("members.txt")
         root = service.tree
-        var = root.getChild(3).getChild(2).getChild(2)
+        var = root.getChild(3).getChild(3).getChild(2)
         self.assertEqual(var.getType(), parser.servicegenLexer.VARIABLE)
         self.assertEqual(var.getChild(0).getType(), parser.servicegenLexer.VARTYPE)
         self.assertEqual(var.getChild(0).getChild(0).getText(), 'hash')
@@ -345,7 +345,7 @@ class SimpleParserTest(unittest.TestCase):
         """
         service = self._parseService("members.txt")
         root = service.tree
-        var = root.getChild(3).getChild(2).getChild(3)
+        var = root.getChild(3).getChild(3).getChild(3)
         self.assertEqual(var.getChild(2).getType(), parser.servicegenLexer.FUNCTION_CALL)
         self.assertEqual(var.getChild(2).getChild(0).getType(), parser.servicegenLexer.FUNCTION_NAME_USER)
         self.assertEqual(var.getChild(2).getChild(0).getChild(0).getText(), 'data.getStations')
@@ -392,23 +392,39 @@ class SimpleParserTest(unittest.TestCase):
     def testDocumentationRequest(self):
         """Tests the documentation of a request block."""
         request = self._parseService("docs.txt").tree.getChild(2)
-        self.assertEqual(request.getChild(4).getType(), parser.servicegenLexer.DOC)
-        self.assertEqual(request.getChild(4).getChild(0).getText(), "doc")
-        self.assertEqual(request.getChild(4).getChild(1).getText(), 'Returns all available forecasts for a ZIP code in Switzerland.')
+        self.assertEqual(request.getChild(5).getType(), parser.servicegenLexer.DOC)
+        self.assertEqual(request.getChild(5).getChild(0).getText(), "doc")
+        self.assertEqual(request.getChild(5).getChild(1).getText(), 'Returns all available forecasts for a ZIP code in Switzerland.')
     
     def testDocumentationRequestParam(self):
         """Tests the documentation of a request param."""
         request = self._parseService("docs.txt").tree.getChild(2)
-        self.assertEqual(request.getChild(5).getType(), parser.servicegenLexer.DOC_FOR)
-        self.assertEqual(request.getChild(5).getChild(0).getText(), "zip")
-        self.assertEqual(request.getChild(5).getChild(1).getText(), 'ZIP code for which to get weather forecast')
+        self.assertEqual(request.getChild(6).getType(), parser.servicegenLexer.DOC_FOR)
+        self.assertEqual(request.getChild(6).getChild(0).getText(), "zip")
+        self.assertEqual(request.getChild(6).getChild(1).getText(), 'ZIP code for which to get weather forecast')
     
     def testDocumentationOutput(self):
         """Tests the documentation of an output block."""
-        output = self._parseService("docs.txt").tree.getChild(2).getChild(3).getChild(0)
+        output = self._parseService("docs.txt").tree.getChild(2).getChild(4).getChild(0)
         self.assertEqual(output.getChild(1).getType(), parser.servicegenLexer.DOC)
         self.assertEqual(output.getChild(1).getChild(0).getText(), "doc")
         self.assertEqual(output.getChild(1).getChild(1).getText(), 'Returns the weather forecast in XML format.')
+    
+    def testPostData(self):
+        """Tests the declaration of POST parameters."""
+        request = self._parseService("post.txt").tree.getChild(1)
+        postparams = request.getChild(2)
+        self.assertEqual(postparams.getChildCount(), 2)
+        self.assertEqual(postparams.getChild(0).getText(), 'key')
+        self.assertEqual(postparams.getChild(1).getText(), 'value')
+    
+    def testPostDataWildcard(self):
+        """Tests the declaration of POST parameters with a wildcard."""
+        request = self._parseService("post.txt").tree.getChild(2)
+        postparams = request.getChild(2)
+        self.assertEqual(postparams.getChildCount(), 2)
+        self.assertEqual(postparams.getChild(0).getText(), 'indoc')
+        self.assertEqual(postparams.getChild(1).getText(), '*')
     
     def _parseService(self, service):
         """Parses the service from the given file."""
