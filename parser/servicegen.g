@@ -118,12 +118,12 @@ xmlLiteral
 
 functionCall
     :  functionNameBuiltin functionArgs -> ^(FUNCTION_CALL ^(FUNCTION_NAME_BUILTIN functionNameBuiltin) functionArgs)
-    |  functionNameBuiltin '(' functionArgs ')' -> ^(FUNCTION_CALL ^(FUNCTION_NAME_BUILTIN functionNameBuiltin) functionArgs)
-    |  IDENTIFIER '(' functionArgs? ')' -> ^(FUNCTION_CALL ^(FUNCTION_NAME_USER IDENTIFIER) functionArgs)
     |  IDENTIFIER functionArgs?         -> ^(FUNCTION_CALL ^(FUNCTION_NAME_USER IDENTIFIER) functionArgs)
     ;
 functionArgs
-    :  functionArg (','! functionArg)*;
+    :  '('! functionArg (','! functionArg)* ')'!
+    |  functionArg (','! functionArg)*
+    ;
 functionArg
     :   literal
     |   IDENTIFIER  -> ^(VARREF IDENTIFIER);
