@@ -83,7 +83,7 @@ class ${req['name']}:
         cacheKey = re.sub('[^a-zA-Z_]', '', cacheKey).replace('__', '_')[1:]
         %>
         %if cacheDuration > 0:
-        ${identifier} = servicegen.function.get_cache('${cacheKey}'):
+        ${identifier} = servicegen.function.get_cache('${cacheKey}')
         if ${identifier} != None:
              ${identifier} = ${value}
              servicegen.function.set_cache('${cacheKey}', ${identifier})
