@@ -24,6 +24,8 @@ tokens {
     STATEMENT_VALIDATE;
     STATEMENT_OUTPUT;
     FUNCTION_CALL;
+    FUNCTION_NAME_USER;
+    FUNCTION_NAME_BUILTIN;
     EXTERNAL;
     CACHE;
     DURATION_SECONDS;
@@ -115,14 +117,22 @@ xmlLiteral
     | '</' ~'>'+ '>';
 
 functionCall
-    :  IDENTIFIER '(' functionArgs? ')' -> ^(FUNCTION_CALL IDENTIFIER functionArgs)
-    |  IDENTIFIER functionArgs?         -> ^(FUNCTION_CALL IDENTIFIER functionArgs)
+    :  functionNameBuiltin functionArgs -> ^(FUNCTION_CALL ^(FUNCTION_NAME_BUILTIN functionNameBuiltin) functionArgs)
+    |  functionNameBuiltin '(' functionArgs ')' -> ^(FUNCTION_CALL ^(FUNCTION_NAME_BUILTIN functionNameBuiltin) functionArgs)
+    |  IDENTIFIER '(' functionArgs? ')' -> ^(FUNCTION_CALL ^(FUNCTION_NAME_USER IDENTIFIER) functionArgs)
+    |  IDENTIFIER functionArgs?         -> ^(FUNCTION_CALL ^(FUNCTION_NAME_USER IDENTIFIER) functionArgs)
     ;
 functionArgs
     :  functionArg (','! functionArg)*;
 functionArg
     :   literal
     |   IDENTIFIER  -> ^(VARREF IDENTIFIER);
+functionNameBuiltin
+    :   'validate'
+    |   'log.trace' | 'log.debug' | 'log.info' | 'log.warn'
+    |   'log.error' | 'log.fatal'
+    |   'etag' | 'expires'
+    ;
 
 /* Request */
 HTTP_METHOD
