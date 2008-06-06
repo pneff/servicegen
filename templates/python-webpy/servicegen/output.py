@@ -1,4 +1,5 @@
 import web
+from xml.sax.saxutils import escape
 
 def best_of(types):
     """
@@ -21,9 +22,21 @@ def best_of(types):
     # Return first entry (to be changed)
     return types[0]
 
+def header(out_type):
+    content_types = {
+        'xml'  : 'text/xml; charset=utf-8',
+        'csv' :  'text/csv',
+        'html' : 'text/html; charset=utf-8',
+    }
+
+    if out_type in content_types.keys():
+        web.header('Content-Type', content_types[out_type], unique=True)
+    else:
+        web.header('Content-Type', content_types['html'], unique=True)
+
 def write(out_type, value_type, value):
     if out_type == 'xml':
-        if value_type == 'LITERAL_XML':
-            web.output(value)
-        else:
+        if value_type != 'LITERAL_XML':
             web.output(escape(value))
+            return
+    web.output(value)
