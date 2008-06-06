@@ -94,9 +94,11 @@ class ${req['name']}:
             %endif
           %endif
           %endfor
-        
+            
+            __output_type = servicegen.output.best_of(${req['output'].keys()})
+            
           %for out_type, out in req['output'].iteritems():
-            if servicegen.output.matches('${out_type}'):
+            if __output_type == '${out_type}':
                 print "Outputting ${out_type}"
             
           %endfor
