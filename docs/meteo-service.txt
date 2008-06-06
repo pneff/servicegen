@@ -10,23 +10,16 @@ external:webpy "data";
 GetForecasts: GET "/{zip}" {
     validate zip, /[0-9]{4}/;
     
-    # Defines the variable data. SELECT statements are automatically
-    # executed using the first database connection from config.
     records cached<1 day> weather = data.getWeather(zip);
     
-    # Defines output for XML. This output can be requested in two ways:
-    #   - Requesting path with ".xml" at the end
-    #   - Sending accept-encoding with XML
-    # <...> automatically starts an XML token.
     @doc "Returns the weather forecast in XML format."
     output<xml> {
         <meteo>
             <zip>{zip}</zip>
-            <sql>{weather}</sql>
+            {weather}
         </meteo>
     }
     
-    # Defines output for CSV.
     output<csv> cached<1 day> {
         {weather}
     }
