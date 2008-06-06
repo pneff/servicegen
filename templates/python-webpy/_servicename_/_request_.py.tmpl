@@ -47,7 +47,9 @@ def cache_duration_in_secs(stm):
     else:
         return value
 
-%>class ${req['name']}:
+%>import servicegen.function
+
+class ${req['name']}:
   % for method in methods:
     <% method_name, method_req = method %>
     def ${method_name}(${req_path_params}):
