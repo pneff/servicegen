@@ -7,7 +7,7 @@ for req in requests:
     path = req['path']
     
     # Normalize path to a regexp
-    path = re.sub('{[^}]+}', '[^/]+', path)
+    path = re.sub('{[^}]+}', '([^/]+)', path)
     my_requests.setdefault(path, []).append((method, req['name']))
 
 %>#!/usr/bin/env python
