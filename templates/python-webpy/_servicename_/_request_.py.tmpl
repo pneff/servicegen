@@ -124,11 +124,20 @@ class ${req['name']}:
           %endfor
             
             __output_type = servicegen.output.best_of(${req['output'].keys()})
-            servicegen.output.header(__output_type)
+            __outputter = servicegen.output.get_outputter(__output_type)
+            __outputter.header()
           %for out_type, out in req['output'].iteritems():
             if __output_type == '${out_type}':
               %for out_statement in out['statements']:
-                servicegen.output.write('${out_type}', '${value_type(out_statement, req)}', ${getStmValue(out_statement)})
+              %if value_type(out_statement, req) == 'array':
+                __outputter.write_array(${getStmValue(out_statement)}, '${out_statement.getChild(0).getText()}')
+              %elif value_type(out_statement, req) == 'records':
+                __outputter.write_records(${getStmValue(out_statement)}, '${out_statement.getChild(0).getText()}')
+              %elif value_type(out_statement, req) == 'hash':
+                __outputter.write_hash(${getStmValue(out_statement)}, '${out_statement.getChild(0).getText()}')
+              %else:
+                __outputter.write('${value_type(out_statement, req)}', ${getStmValue(out_statement)})
+              %endif
               %endfor
             
           %endfor

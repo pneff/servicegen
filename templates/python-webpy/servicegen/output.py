@@ -1,4 +1,4 @@
-import web
+import sys, web, csv
 from xml.sax.saxutils import escape
 
 def best_of(types):
@@ -22,21 +22,82 @@ def best_of(types):
     # Return first entry (to be changed)
     return types[0]
 
-def header(out_type):
-    content_types = {
-        'xml'  : 'text/xml; charset=utf-8',
-        'csv' :  'text/csv',
-        'html' : 'text/html; charset=utf-8',
-    }
+def get_outputter(out_type):
+    return globals()['Outputter' + out_type.upper()]()
 
-    if out_type in content_types.keys():
-        web.header('Content-Type', content_types[out_type], unique=True)
-    else:
-        web.header('Content-Type', content_types['html'], unique=True)
 
-def write(out_type, value_type, value):
-    if out_type == 'xml':
-        if value_type != 'LITERAL_XML':
-            web.output(escape(value))
-            return
-    web.output(value)
+class Outputter:
+    def header(self):
+        pass
+    
+    def write(self, value_type, value):
+        pass
+    
+    def write_records(self, value, varname):
+        pass
+    
+    def write_array(self, value, varname):
+        pass
+    
+    def write_hash(self, value, varname):
+        pass
+
+
+class OutputterXML(Outputter):
+    def header(self):
+        web.header('Content-Type', 'text/xml; charset=utf-8', unique=True)
+    
+    def write(self, value_type, value):
+        if value_type == 'LITERAL_XML' or value_type == 'dom':
+            return web.output(value)
+        else:
+            return web.output(escape(str(value)))
+    
+    def write_records(self, value, varname):
+        for item in value:
+            web.output('<' + varname + '>')
+            self.write_hash(item, varname)
+            web.output('</' + varname + '>')
+    
+    def write_array(self, value, varname):
+        for item in value:
+            web.output('<' + varname + '>' + 
+                       escape(str(item)) +
+                       '</' + varname + '>')
+    
+    def write_hash(self, value, varname):
+        for key, val in value.iteritems():
+            web.output('<' + key + '>' + 
+                       escape(str(val)) +
+                       '</' + key + '>')
+
+
+class OutputterCSV(Outputter):
+    def header(self):
+        web.header('Content-Type', 'text/csv; charset=utf-8', unique=True)
+    
+    def write(self, value_type, value):
+        web.output(value)
+        web.output("\t")
+    
+    def write_records(self, value, varname):
+        # Header
+        if len(value) > 0:
+            for key in value[0]:
+                web.output(key)
+                web.output("\t")
+            web.output("\n")
+        # Each record
+        for item in value:
+            self.write_hash(item, varname)
+            web.output("\n")
+    
+    def write_array(self, value, varname):
+        for item in value:
+           web.output(item)
+           web.output("\t")
+    
+    def write_hash(self, value, varname):
+        for key, val in value.iteritems():
+            web.output(val)
+            web.output("\t")
