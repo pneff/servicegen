@@ -48,7 +48,7 @@ def cache_duration_in_secs(stm):
         return value
 
 %>import re
-import servicegen.function
+import servicegen.function, servicegen.output
 
 class ${req['name']}:
   % for method in methods:
@@ -93,6 +93,12 @@ class ${req['name']}:
             ${identifier} = ${value}
             %endif
           %endif
+          %endfor
+        
+          %for out_type, out in req['output'].iteritems():
+            if servicegen.output.matches('${out_type}'):
+                print "Outputting ${out_type}"
+            
           %endfor
         
         except servicegen.function.TerminateRequest:
