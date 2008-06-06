@@ -202,7 +202,7 @@ There are a few built-in functions, which are documented in the separate documen
 
 ### Output blocks
 
-    output.xml {
+    output<xml> {
         # ....
     }
 

@@ -117,9 +117,13 @@ xmlLiteral
     | '</' ~'>'+ '>';
 
 functionCall
-    :  functionNameBuiltin functionArgs -> ^(FUNCTION_CALL ^(FUNCTION_NAME_BUILTIN functionNameBuiltin) functionArgs)
-    |  IDENTIFIER functionArgs?         -> ^(FUNCTION_CALL ^(FUNCTION_NAME_USER IDENTIFIER) functionArgs)
+    :  functionName functionArgs -> ^(FUNCTION_CALL functionName functionArgs);
+functionName
+    :  functionNameBuiltin -> ^(FUNCTION_NAME_BUILTIN functionNameBuiltin)
+    |  DOTTED_IDENTIFIER   -> ^(FUNCTION_NAME_USER DOTTED_IDENTIFIER)
+    |  IDENTIFIER          -> ^(FUNCTION_NAME_USER IDENTIFIER)
     ;
+    
 functionArgs
     :  '('! functionArg (','! functionArg)* ')'!
     |  functionArg (','! functionArg)*
@@ -154,7 +158,7 @@ statement
 
 /* Output of a service */
 outputDefinition
-    :   docStatement* 'output.' outputType caching? '{' outputStatement* '}'
+    :   docStatement* 'output<' outputType '>' caching? '{' outputStatement* '}'
                     -> ^(STATEMENT_OUTPUT outputType caching? outputStatement* docStatement*);
 outputType
     :   'xml' | 'csv';
@@ -174,7 +178,12 @@ docName
 
 /* Primitives */
 IDENTIFIER
-    :   (ALPHANUM | '_')+;
+    :   (ALPHANUM | '_')+
+    ;
+
+DOTTED_IDENTIFIER:
+    IDENTIFIER ('.' IDENTIFIER)+
+    ;
 
 fragment
 ALPHANUM:   LETTER | DIGIT;

@@ -14,6 +14,6 @@ config {
 GET "/{zip}" {
     
     @doc "Returns the weather forecast in XML format."
-    output.xml {
+    output<xml> {
     }
 }

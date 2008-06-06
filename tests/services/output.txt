@@ -1,7 +1,7 @@
 service meteo;
 
 GET "/{zip}" {
-    output.xml {
+    output<xml> {
         # Output ZIP
         {zip}
         
@@ -11,8 +11,8 @@ GET "/{zip}" {
 }
 
 GET "/additional" {
-    # Caches the complete output for 3 days
+    # Caches the complete output for 8 months
     # Usually it's better to just cache the variables, though.
-    output.xml cached<8 months> {
+    output<xml> cached<8 months> {
     }
 }

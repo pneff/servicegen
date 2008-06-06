@@ -339,6 +339,17 @@ class SimpleParserTest(unittest.TestCase):
         self.assertEqual(var.getChild(2).getChild(4).getType(), parser.servicegenLexer.VARREF)
         self.assertEqual(var.getChild(2).getChild(4).getChild(0).getText(), 'y')
     
+    def testFunctionCallWithDot(self):
+        """
+        Call a function with a dot.
+        """
+        service = self._parseService("members.txt")
+        root = service.tree
+        var = root.getChild(3).getChild(2).getChild(3)
+        self.assertEqual(var.getChild(2).getType(), parser.servicegenLexer.FUNCTION_CALL)
+        self.assertEqual(var.getChild(2).getChild(0).getType(), parser.servicegenLexer.FUNCTION_NAME_USER)
+        self.assertEqual(var.getChild(2).getChild(0).getChild(0).getText(), 'data.getStations')
+    
     def testExternal(self):
         """
         Define externals members inside the service definition.

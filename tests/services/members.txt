@@ -21,4 +21,5 @@ GET "/by_coordinates/{x},{y}" {
     validate y, /[0-9]+/;
     
     hash stations = getStations(locations, "stations", x, y);
+    hash stations2 = data.getStations(locations);
 }

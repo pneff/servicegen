@@ -38,7 +38,7 @@ GET /by_coordinates/{x},{y} {
     # Caches the value of stations for one day.
     hash cached(1 day) stations = getStations(locations, stations, x, y);
     
-    output.xml {
+    output<xml> {
         <resorts>
             {transform stations using wintersport.xsl}
         </resorts>
