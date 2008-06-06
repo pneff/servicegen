@@ -56,6 +56,16 @@ def function_name(func):
         function = 'servicegen.function.' + function
     return function
 
+def value_type(stm, req):
+    if stm.getText() != 'VARREF':
+        return stm.getText()
+    name = stm.getChild(0).getText()
+    if name in req['vars']:
+        return req['vars'][name]['type']
+    if name in config:
+        return config[name]['type']
+    return 'string'
+
 %>import re
 import servicegen.function, servicegen.output
 % if service['externals'].has_key('webpy'):
@@ -118,7 +128,7 @@ class ${req['name']}:
           %for out_type, out in req['output'].iteritems():
             if __output_type == '${out_type}':
               %for out_statement in out['statements']:
-                servicegen.output.write('${out_type}', '${out_statement}', ${getStmValue(out_statement)})
+                servicegen.output.write('${out_type}', '${value_type(out_statement, req)}', ${getStmValue(out_statement)})
               %endfor
             
           %endfor

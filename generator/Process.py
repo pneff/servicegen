@@ -71,7 +71,11 @@ class Process:
         self.__service['externals'].setdefault(type, []).append(value)
     
     def walk_VARIABLE(self, tree):
-        name = tree.getChild(1).getText()
+        name = ''
+        for i in range(tree.getChildCount()):
+            if tree.getChild(i).getType() == parser.servicegenParser.IDENTIFIER:
+                name = tree.getChild(i).getText()
+                break
         self.__stack.append(self.__currentVar)
         self.__currentVar = {'docs': {'params': {}}}
         self.__currentVar['name'] = tree.getChild(1).getText()
@@ -129,6 +133,8 @@ class Process:
         children = tree.getChildCount()
         for i in range(children):
             self.__currentVar['statements'].append(tree.getChild(i))
+            if tree.getChild(i).getType() == parser.servicegenParser.VARIABLE:
+                self.walk_VARIABLE(tree.getChild(i))
     
     def walk_STATEMENT_OUTPUT(self, tree):
         self.__stack.append(self.__currentVar)
