@@ -23,7 +23,7 @@ GetForecasts: GET "/{zip}" {
     
     # Defines the variable data. SELECT statements are automatically
     # executed using the first database connection from config.
-    records weather = "SELECT * FROM weather WHERE zip={zip} ORDER BY date ASC";
+    records cached<1 day> weather = "SELECT * FROM weather WHERE zip={zip} ORDER BY date ASC";
     
     # Defines output for XML. This output can be requested in two ways:
     #   - Requesting path with ".xml" at the end
