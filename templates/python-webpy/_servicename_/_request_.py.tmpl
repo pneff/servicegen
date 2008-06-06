@@ -54,43 +54,48 @@ class ${req['name']}:
   % for method in methods:
     <% method_name, method_req = method %>
     def ${method_name}(self, ${req_path_params}):
-      %for stm in req['statements']:
-      %if stm.getText() == 'FUNCTION_CALL':
-        <%
-        function = stm.getChild(0).getChild(0).getText()
-        if stm.getChild(0).getText() == 'FUNCTION_NAME_BUILTIN':
-            function = 'servicegen.function.' + function
-        %>${function}(${function_params(stm)})
+        try:
+          %for stm in req['statements']:
+          %if stm.getText() == 'FUNCTION_CALL':
+            <%
+            function = stm.getChild(0).getChild(0).getText()
+            if stm.getChild(0).getText() == 'FUNCTION_NAME_BUILTIN':
+                function = 'servicegen.function.' + function
+            %>${function}(${function_params(stm)})
+
+          %elif stm.getText() == 'VARIABLE':
+            <%
+            identifier, value, cacheDuration, cacheKey = ('', '', 0, '')
+            for i in range(stm.getChildCount()):
+                child = stm.getChild(i)
+                if child.getText() == 'VARTYPE':
+                    # ignore
+                    cacheKey += '_' + child.getChild(0).getText()
+                    pass
+                elif child.getText() == 'CACHE':
+                    # caching
+                    cacheDuration = cache_duration_in_secs(child)
+                    cacheKey += '_' + str(cacheDuration)
+                elif child.getText()[0:8] == 'LITERAL_':
+                    value = getStmValue(child)
+                    cacheKey += '_' + value
+                else:
+                    identifier = child.getText()
+                    cacheKey += '_' + identifier
+            cacheKey = re.sub('[^a-zA-Z_]', '', cacheKey).replace('__', '_')[1:]
+            %>
+            %if cacheDuration > 0:
+            ${identifier} = servicegen.function.get_cache('${cacheKey}')
+            if ${identifier} != None:
+                 ${identifier} = ${value}
+                 servicegen.function.set_cache('${cacheKey}', ${identifier})
+            %else:
+            ${identifier} = ${value}
+            %endif
+          %endif
+          %endfor
         
-      %elif stm.getText() == 'VARIABLE':
-        <%
-        identifier, value, cacheDuration, cacheKey = ('', '', 0, '')
-        for i in range(stm.getChildCount()):
-            child = stm.getChild(i)
-            if child.getText() == 'VARTYPE':
-                # ignore
-                cacheKey += '_' + child.getChild(0).getText()
-                pass
-            elif child.getText() == 'CACHE':
-                # caching
-                cacheDuration = cache_duration_in_secs(child)
-                cacheKey += '_' + str(cacheDuration)
-            elif child.getText()[0:8] == 'LITERAL_':
-                value = getStmValue(child)
-                cacheKey += '_' + value
-            else:
-                identifier = child.getText()
-                cacheKey += '_' + identifier
-        cacheKey = re.sub('[^a-zA-Z_]', '', cacheKey).replace('__', '_')[1:]
-        %>
-        %if cacheDuration > 0:
-        ${identifier} = servicegen.function.get_cache('${cacheKey}')
-        if ${identifier} != None:
-             ${identifier} = ${value}
-             servicegen.function.set_cache('${cacheKey}', ${identifier})
-        %else:
-        ${identifier} = ${value}
-        %endif
-      %endif
-      %endfor
+        except servicegen.function.TerminateRequest:
+            # Ignore this exception
+            return
   % endfor

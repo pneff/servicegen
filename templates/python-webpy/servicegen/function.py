@@ -1,5 +1,9 @@
 import web
 
+class TerminateRequest(Exception):
+    """Exception thrown when the request should be terminated."""
+    pass
+
 def validate(value, comparison):
     matches = True
     try:
@@ -9,8 +13,8 @@ def validate(value, comparison):
     if not matches:
         web.ctx.status = '400 Bad Request'
         web.header('Content-Type', 'text/html')
-        return web.output('Invalid value "' + value + '"\n')
-        
+        web.output('Invalid value "' + value + '"\n')
+        raise TerminateRequest, 'Invalid value "' + value + '"'
 
 def get_cache(key):
     return None
