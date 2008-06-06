@@ -24,7 +24,10 @@ log = servicegen.init.getLogger(cfg, 'servicegen.' + SERVICENAME)
 
 urls = (
     % for path, request in my_requests.iteritems():
-    '${path}',  '${request[0][1]}',
+    # With excention
+    '${path}\.[a-z]{3,4}$',  '${request[0][1]}',
+    # Without extension
+    '${path}',               '${request[0][1]}',
     % endfor
 )
 
