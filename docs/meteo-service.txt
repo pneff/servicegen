@@ -23,21 +23,24 @@ GetForecasts: GET "/{zip}" {
     
     # Defines the variable data. SELECT statements are automatically
     # executed using the first database connection from config.
-    records cached<1 day> weather = "SELECT * FROM weather WHERE zip={zip} ORDER BY date ASC";
+    records cached<1 day> weather = data.getData(zip);
     
     # Defines output for XML. This output can be requested in two ways:
     #   - Requesting path with ".xml" at the end
     #   - Sending accept-encoding with XML
     # <...> automatically starts an XML token.
     @doc "Returns the weather forecast in XML format."
-    output.xml {
+    output<xml> {
         <meteo>
-            {weather}
+            <zip>{zip}</zip>
+            <sql>{weather}</sql>
         </meteo>
     }
     
     # Defines output for CSV.
-    output.csv cached<1 day> {
+    output<csv> cached<1 day> {
+        {zip}
+        "\t"
         {weather}
     }
 }

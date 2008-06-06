@@ -50,6 +50,12 @@ def cache_duration_in_secs(stm):
     else:
         return value
 
+def function_name(func):
+    function = func.getChild(0).getChild(0).getText()
+    if func.getChild(0).getText() == 'FUNCTION_NAME_BUILTIN':
+        function = 'servicegen.function.' + function
+    return function
+
 %>import re
 import servicegen.function, servicegen.output
 
@@ -60,15 +66,11 @@ class ${req['name']}:
         try:
           %for stm in req['statements']:
           %if stm.getText() == 'FUNCTION_CALL':
-            <%
-            function = stm.getChild(0).getChild(0).getText()
-            if stm.getChild(0).getText() == 'FUNCTION_NAME_BUILTIN':
-                function = 'servicegen.function.' + function
-            %>${function}(${function_params(stm)})
+            ${function_name(stm)}(${function_params(stm)})
 
           %elif stm.getText() == 'VARIABLE':
             <%
-            identifier, value, cacheDuration, cacheKey = ('', '', 0, '')
+            identifier, value, cacheDuration, cacheKey, cacheKeyVars = ('', '', 0, '', [])
             for i in range(stm.getChildCount()):
                 child = stm.getChild(i)
                 if child.getText() == 'VARTYPE':
@@ -82,16 +84,24 @@ class ${req['name']}:
                 elif child.getText()[0:8] == 'LITERAL_':
                     value = getStmValue(child)
                     cacheKey += '_' + value
+                elif child.getText() == 'FUNCTION_CALL':
+                    value = function_name(child) + '(' + function_params(child) + ')'
+                    for param in [child.getChild(i) for i in range(1, child.getChildCount())]:
+                        if param.getText() == 'VARREF':
+                            cacheKeyVars.append(param.getChild(0).getText())
+                    cacheKey += '_' + value
                 else:
                     identifier = child.getText()
                     cacheKey += '_' + identifier
-            cacheKey = re.sub('[^a-zA-Z_]', '', cacheKey).replace('__', '_')[1:]
+            cacheKey = "'" + re.sub('[^a-zA-Z_]', '', cacheKey).replace('__', '_')[1:] + "'"
+            if len(cacheKeyVars) > 0:
+                cacheKey += ' + ' + ' + '.join(cacheKeyVars)
             %>
             %if cacheDuration > 0:
-            ${identifier} = servicegen.function.get_cache('${cacheKey}')
+            ${identifier} = servicegen.function.get_cache(${cacheKey})
             if ${identifier} == None:
                 ${identifier} = ${value}
-                servicegen.function.set_cache('${cacheKey}', ${identifier})
+                servicegen.function.set_cache(${cacheKey}, ${identifier})
             %else:
             ${identifier} = ${value}
             %endif
