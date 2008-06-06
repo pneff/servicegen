@@ -11,11 +11,11 @@ def main():
     # Generator("debug", tree.tree).write("out")
     
     gen = Generator("CodeTemplator", tree.tree)
-    gen.setOption("template", "templates/python-webpy")
+    gen.setOption("template", sys.path[0] + "/templates/python-webpy")
     gen.write("out/webpy")
 
     gen = Generator("CodeTemplator", tree.tree)
-    gen.setOption("template", "templates/html")
+    gen.setOption("template", sys.path[0] + "/templates/html")
     gen.write("out/html")
 
 
