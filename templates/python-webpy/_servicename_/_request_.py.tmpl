@@ -58,6 +58,11 @@ def function_name(func):
 
 %>import re
 import servicegen.function, servicegen.output
+% if service['externals'].has_key('webpy'):
+% for imp in service['externals']['webpy']:
+import ${imp}
+% endfor
+% endif
 
 class ${req['name']}:
   % for method in methods:

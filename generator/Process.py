@@ -54,7 +54,8 @@ class Process:
     
     def walk_SERVICE(self, tree):
         self.__service = {'docs': {'params': {}},
-                          'name': tree.getChild(0).getText()}
+                          'name': tree.getChild(0).getText(),
+                          'externals': {}}
         self.__currentVar = self.__service
         self.walktree(tree)
     
@@ -63,6 +64,11 @@ class Process:
         self.__variableContext = self.__config
         self.walktree(tree)
         self.__variableContext = None
+    
+    def walk_EXTERNAL(self, tree):
+        type = tree.getChild(0).getText()
+        value = tree.getChild(1).getText()
+        self.__service['externals'].setdefault(type, []).append(value)
     
     def walk_VARIABLE(self, tree):
         name = tree.getChild(1).getText()

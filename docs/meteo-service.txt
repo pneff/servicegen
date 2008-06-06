@@ -3,18 +3,7 @@
 @version "1.0"
 service meteo;
 
-# Comments can be included with hash
-# Newlines terminate a command.
-
-# Configuration: Settings that have to be configured.
-# There will be a uniform config handling framework
-# which reads data from a YAML file somewhere.
-config {
-    # database is the data type.
-    # db is the variable name.
-    @doc "Database containing the weather information. Must have a table 'weather' with one entry per day."
-    database db;
-}
+external:webpy "data";
 
 @doc       "Returns all available forecasts for a ZIP code in Switzerland."
 @param zip "ZIP code for which to get weather forecast"
