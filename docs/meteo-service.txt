@@ -3,7 +3,7 @@
 @version "1.0"
 service meteo;
 
-external:webpy "data";
+external:webpy "meteo-data";
 
 @doc       "Returns all available forecasts for a ZIP code in Switzerland."
 @param zip "ZIP code for which to get weather forecast"
