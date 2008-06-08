@@ -147,8 +147,8 @@ HTTP_METHOD
 requestPath
     : StringLiteral -> ^(REQUEST_PATH StringLiteral);
 requestPostParams
-    : '->'! '('! IDENTIFIER (','! IDENTIFIER)* ')'!
-    | '->'! '('! IDENTIFIER '*' ')'!
+    : '<-'! '('! IDENTIFIER (','! IDENTIFIER)* ')'!
+    | '<-'! '('! IDENTIFIER '*' ')'!
     ;
 requestName
     : IDENTIFIER ':' -> ^(REQUEST_NAME IDENTIFIER);

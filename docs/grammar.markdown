@@ -114,12 +114,12 @@ A few example requests for this example path:
 
 POST parameters can be declared with the arrow syntax:
 
-    PUT "/user/{uid}" -> (key, value) {
+    PUT "/user/{uid}" <- (key, value) {
         # the POST params `key', `value' are accessible
         # in the same way as `uid'
     }
 
-    PUT "/user/{uid}" -> (xml*) {
+    PUT "/user/{uid}" <- (xml*) {
         # The whole request body is available under `xml'
     }
 
