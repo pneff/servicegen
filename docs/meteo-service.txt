@@ -24,3 +24,7 @@ GetForecasts: GET "/{zip}" {
         {weather}
     }
 }
+
+PUT "/save/{zip}" -> (date, type, temparature) {
+    
+}

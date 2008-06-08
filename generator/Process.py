@@ -112,6 +112,7 @@ class Process:
         self.__currentVar = {
             'docs': {'params': {}},
             'vars': {},
+            'postparams': [],
             'method': tree.getChild(0).getText(),
             'output': {},
             'name': 'Request' + str(len(self.__requests))
@@ -124,6 +125,14 @@ class Process:
     
     def walk_REQUEST_PATH(self, tree):
         self.__currentVar['path'] = tree.getChild(0).getText()
+    
+    def walk_REQUEST_POSTPARAMS(self, tree):
+        if tree.getChildCount() == 2 and tree.getChild(1).getText() == '*':
+            # Wildcard
+            self.__currentVar['postparams'].append(tree.getChild(0).getText() + '*')
+        else:
+            for i in range(tree.getChildCount()):
+                self.__currentVar['postparams'].append(tree.getChild(i).getText())
     
     def walk_REQUEST_NAME(self, tree):
         self.__currentVar['name'] = tree.getChild(0).getText()
