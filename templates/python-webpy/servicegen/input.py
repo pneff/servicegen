@@ -16,7 +16,7 @@ def get(key):
                                      keep_blank_values=1)
         
         if key in input:
-            return input[key]
+            return input[key].value
         else:
             web.ctx.status = '400 Bad Request'
             web.header('Content-Type', 'text/html')
