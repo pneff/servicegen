@@ -10,6 +10,13 @@ for request in requests:
     # Normalize path to a regexp
     path = re.sub('{[^}]+}', '[^/]+', path)
     my_requests.setdefault(path, []).append((method, request))
+    
+    # Calculate index of the current request `req' inside the
+    # my_requests array for the appropriate path. If another
+    # request has the same path and comes before this request,
+    # this file doesn't have to be created.
+    if request == req and len(my_requests[path]) > 1:
+        return
 
 req_path = re.sub('{[^}]+}', '[^/]+', req['path'])
 # Only get path params

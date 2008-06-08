@@ -60,9 +60,10 @@ class CodeTemplator:
                    }
         data_def.update(data)
         out = template.render(**data_def)
-        f = open(targetpath, "w")
-        f.write(out)
-        f.close()
+        if out != '':
+            f = open(targetpath, "w")
+            f.write(out)
+            f.close()
     
     def getValue(self, value):
         """Returns the value in the target language."""
