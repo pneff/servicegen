@@ -7,21 +7,31 @@ import setup
 from cStringIO import StringIO
 from servicegen.function import TerminateRequest
 
+def input():
+    """
+    Returns input data (POST or GET) as a dictionary.
+    Same as web.input() but works for all HTTP methods.
+    """
+    e = web.ctx.env.copy()
+    if e['REQUEST_METHOD'] in ('GET', 'HEAD'):
+        data = cgi.FieldStorage(environ=e, keep_blank_values=1)
+    else:
+        data = cgi.FieldStorage(fp = StringIO(web.data()), environ=e,
+                                 keep_blank_values=1)
+    retval = {}
+    for key in data:
+        retval[key] = data[key].value
+    return retval
+
 def get(key):
     if key[-1] == '*':
         return web.data()
     else:
         # Get POST data. Can't use web.input() as it
         # only works for POST method, not PUT
-        e = web.ctx.env.copy()
-        if e['REQUEST_METHOD'] in ['GET', 'POST']:
-            input = cgi.FieldStorage(environ=e, keep_blank_values=1)
-        else:
-            input = cgi.FieldStorage(fp = StringIO(web.data()), environ=e,
-                                     keep_blank_values=1)
-        
+        input = input()
         if key in input:
-            return input[key].value
+            return input[key]
         else:
             web.ctx.status = '400 Bad Request'
             web.header('Content-Type', 'text/html')
