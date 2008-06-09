@@ -35,7 +35,11 @@ def path_params(req):
     req_path_params = filter(
         lambda param: param.startswith('{') and param.endswith('}'),
         re.split('({[^}]+})', req['path']))
-    return ", ".join(map(lambda param: param[1:-1], req_path_params))
+    req_path_params = map(lambda param: param[1:-1], req_path_params)
+    if len(req_path_params) > 0:
+        return ", " + ", ".join(req_path_params)
+    else:
+        return ''
 
 def function_params(statement):
     params = [getStmValue(statement.getChild(i))
@@ -95,8 +99,12 @@ ${key} = servicegen.input.get_config('${key}', '${value['type']}')
 class ${req['name']}:
   % for method in methods:
     <% method_name, method_req = method %>
-    def ${method_name}(self, ${path_params(method_req)}):
-        logger.info("${method_name} ${method_req['path']}: ${('%s, ' * len(path_params(method_req).split(','))).rstrip(', ')}") % (${path_params(method_req)},)
+    def ${method_name}(self ${path_params(method_req)}):
+      %if path_params(method_req) == '':
+        logger.info("${method_name} ${method_req['path']}")
+      %else:
+        logger.info("${method_name} ${method_req['path']}: ${('%s, ' * (len(path_params(method_req).split(','))-1)).rstrip(', ')}" % (${path_params(method_req).lstrip(', ')},))
+      %endif
         try:
           %for var in method_req['postparams']:
             ${var.replace('*', '')} = servicegen.input.get('${var}')
@@ -105,7 +113,7 @@ class ${req['name']}:
           %for stm in method_req['statements']:
           %if stm.getText() == 'FUNCTION_CALL':
             ${function_name(stm)}(${function_params(stm)})
-
+            
           %elif stm.getText() == 'VARIABLE':
             <%
             identifier, value, cacheDuration, cacheKey, cacheKeyVars = ('', '', 0, '', [])
