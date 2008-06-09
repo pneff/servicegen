@@ -80,6 +80,7 @@ def value_type(stm, req):
 
 import re
 import servicegen.function, servicegen.output, servicegen.input
+from setup import config, logger
 % if service['externals'].has_key('webpy'):
 % for imp in service['externals']['webpy']:
 import ${imp.replace('.py', '')}
@@ -90,6 +91,7 @@ class ${req['name']}:
   % for method in methods:
     <% method_name, method_req = method %>
     def ${method_name}(self, ${path_params(method_req)}):
+        logger.info("${method_name} ${method_req['path']}: ${('%s, ' * len(path_params(method_req).split(','))).rstrip(', ')}") % (${path_params(method_req)},)
         try:
           %for var in method_req['postparams']:
             ${var.replace('*', '')} = servicegen.input.get('${var}')
