@@ -29,9 +29,9 @@ def get(key):
     else:
         # Get POST data. Can't use web.input() as it
         # only works for POST method, not PUT
-        input = input()
-        if key in input:
-            return input[key]
+        data = input()
+        if key in data:
+            return data[key]
         else:
             web.ctx.status = '400 Bad Request'
             web.header('Content-Type', 'text/html')
