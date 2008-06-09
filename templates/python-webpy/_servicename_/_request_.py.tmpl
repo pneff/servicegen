@@ -92,7 +92,7 @@ class ${req['name']}:
     def ${method_name}(self, ${path_params(method_req)}):
         try:
           %for var in method_req['postparams']:
-            ${var} = servicegen.input.get('${var}')
+            ${var.replace('*', '')} = servicegen.input.get('${var}')
           %endfor
           
           %for stm in method_req['statements']:
