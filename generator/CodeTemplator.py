@@ -8,7 +8,9 @@ class CodeTemplator:
     non-template files and directories are copied over
     to the target directory.
     """
-    __options = {}
+    __options = {
+        'type': '',
+    }
     __outdir = '/tmp/'
     
     def __init__(self, process):
@@ -25,6 +27,10 @@ class CodeTemplator:
         for root, dirs, files in os.walk(template):
             path = root[len(template):]
             self.__processFiles(path, files)
+        externals = self.process.getService()['externals']
+        if self.__options['type'] in externals:
+            for source in externals[self.__options['type']]:
+                shutil.copyfile(source, os.path.join(self.__outdir, source))
     
     def __processFiles(self, path, files):
         for file in files:
