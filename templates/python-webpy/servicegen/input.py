@@ -36,4 +36,22 @@ def get_config(key, type):
     
     if type == 'regexp':
         return re.compile('^' + value[1:-1] + '$')
+    elif type == 'database':
+        return get_config_db(value)
     return value
+
+def get_config_db(dsn):
+    """
+    Returns a web.py database configuration dictionary.
+    Parses a DSN of the format dbn://user:password/dbname
+    @TODO: Support multiple DBs as described in http://webpy.org/cookbook/multidbs
+    """
+    regexp = '(?P<dbn>[a-z]+)://((?P<user>[^:]+):(?P<pw>[^/]+))?/(?P<db>.+)'
+    result = re.match(regexp, dsn)
+    if result == None:
+        raise Exception, "Invalid databse connection string: " + dsn
+    retval = {}
+    for key, value in result.groupdict().iteritems():
+        if value != None:
+            retval[key] = value
+    return retval

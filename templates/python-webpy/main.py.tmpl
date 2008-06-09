@@ -17,9 +17,18 @@ for req in requests:
 
 import web
 from setup import SERVICENAME, logger
+import servicegen.input
 % for request in my_requests.values():
 from ${servicename}.${request[0][1]} import ${request[0][1]}
 % endfor
+
+# Configure database
+% for key, value in config.iteritems():
+%   if value['type'] == 'database':
+web.config.db_parameters = servicegen.input.get_config('${key}', '${value['type']}')
+%   endif
+% endfor
+
 
 urls = (
     % for path, request in my_requests.iteritems():
