@@ -58,7 +58,7 @@ class OutputterXML(Outputter):
             return web.output(escape(str(value)))
     
     def write_records(self, value, varname):
-        if len(value) == 0:
+        if value == None or len(value) == 0:
             web.output('<' + varname + ' />')
         else:
             for item in value:
@@ -67,7 +67,7 @@ class OutputterXML(Outputter):
                 web.output('</' + varname + '>')
     
     def write_array(self, value, varname):
-        if len(value) == 0:
+        if value == None or len(value) == 0:
             web.output('<' + varname + ' />')
         else:
             for item in value:
