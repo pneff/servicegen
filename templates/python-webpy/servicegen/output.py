@@ -58,16 +58,22 @@ class OutputterXML(Outputter):
             return web.output(escape(str(value)))
     
     def write_records(self, value, varname):
-        for item in value:
-            web.output('<' + varname + '>')
-            self.write_hash(item, varname)
-            web.output('</' + varname + '>')
+        if len(value) == 0:
+            web.output('<' + varname + ' />')
+        else:
+            for item in value:
+                web.output('<' + varname + '>')
+                self.write_hash(item, varname)
+                web.output('</' + varname + '>')
     
     def write_array(self, value, varname):
-        for item in value:
-            web.output('<' + varname + '>' + 
-                       escape(str(item)) +
-                       '</' + varname + '>')
+        if len(value) == 0:
+            web.output('<' + varname + ' />')
+        else:
+            for item in value:
+                web.output('<' + varname + '>' +
+                           escape(str(item)) +
+                           '</' + varname + '>')
     
     def write_hash(self, value, varname):
         for key, val in value.iteritems():
