@@ -87,6 +87,11 @@ import ${imp.replace('.py', '')}
 % endfor
 % endif
 
+# Configuration variables
+% for key, value in config.iteritems():
+${key} = servicegen.input.get_config('${key}', '${value['type']}')
+% endfor
+
 class ${req['name']}:
   % for method in methods:
     <% method_name, method_req = method %>

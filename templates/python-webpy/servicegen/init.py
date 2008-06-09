@@ -15,7 +15,7 @@ def getConfig(app):
     filename = app + '.cfg'
     cfg.read([
         '/etc/servicegen/common.cfg', os.path.expanduser('~/.servicegen/common.cfg'),
-        filename,
+        app + '-default.cfg', filename,
         '/etc/servicegen/' + filename, os.path.expanduser('~/.servicegen/' + filename)])
     
     if len(sys.argv) == 1 and cfg.has_option('server', 'port'):
