@@ -126,7 +126,8 @@ functionName
     ;
     
 functionArgs
-    :  '('! functionArg (','! functionArg)* ')'!
+    :  '('! ')'!
+    |  '('! functionArg (','! functionArg)* ')'!
     |  functionArg (','! functionArg)*
     ;
 functionArg
