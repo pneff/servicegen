@@ -29,9 +29,14 @@ def get(key):
     else:
         # Get POST data. Can't use web.input() as it
         # only works for POST method, not PUT
+        fetchkey = key
+        if fetchkey[-1] == '?': fetchkey = fetchkey[0:-1]
         data = input()
-        if key in data:
-            return data[key]
+        if fetchkey in data:
+            return data[fetchkey]
+        elif key[-1] == '?':
+            # Optional param, return None-object
+            return None
         else:
             web.ctx.status = '400 Bad Request'
             web.ctx.outputter.write_exception(('missing value', 'Missing value "' + key + '"'))

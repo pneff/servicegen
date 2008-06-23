@@ -442,6 +442,14 @@ class SimpleParserTest(unittest.TestCase):
         self.assertEqual(postparams.getChild(0).getText(), 'indoc')
         self.assertEqual(postparams.getChild(1).getText(), '*')
     
+    def testPostDataOptional(self):
+        """Tests the declaration of POST parameters with a question mark (optional)."""
+        request = self._parseService("post.txt").tree.getChild(3)
+        postparams = request.getChild(2)
+        self.assertEqual(postparams.getChildCount(), 2)
+        self.assertEqual(postparams.getChild(0).getText(), 'password')
+        self.assertEqual(postparams.getChild(1).getText(), '?')
+    
     def _parseService(self, service):
         """Parses the service from the given file."""
         s = Service()

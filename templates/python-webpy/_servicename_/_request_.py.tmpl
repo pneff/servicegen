@@ -127,7 +127,7 @@ class ${req['name']}:
         
         try:
           %for var in method_req['postparams']:
-            ${var.replace('*', '')} = servicegen.input.get('${var}')
+            ${var.replace('*', '').replace('?', '')} = servicegen.input.get('${var}')
           %endfor
           
           %for stm in method_req['statements']:

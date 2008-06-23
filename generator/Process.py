@@ -132,7 +132,13 @@ class Process:
             self.__currentVar['postparams'].append(tree.getChild(0).getText() + '*')
         else:
             for i in range(tree.getChildCount()):
-                self.__currentVar['postparams'].append(tree.getChild(i).getText())
+                if tree.getChild(i).getText() == '?':
+                    pass
+                else:
+                    txt = tree.getChild(i).getText()
+                    if i+1 < tree.getChildCount() and tree.getChild(i+1).getText() == '?':
+                        txt += '?'
+                    self.__currentVar['postparams'].append(txt)
     
     def walk_REQUEST_NAME(self, tree):
         self.__currentVar['name'] = tree.getChild(0).getText()

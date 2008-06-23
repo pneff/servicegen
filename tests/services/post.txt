@@ -8,3 +8,7 @@ POST "/anotherpath" <- (key, value) {
 POST "/anotherpath" <- (indoc*) {
     
 }
+
+POST "/optional" <- (password?) {
+    # Password is optional in this example
+}

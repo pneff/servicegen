@@ -108,8 +108,8 @@
             # Copy documentation for POST params to separate dictionary
             postparams_doc = copy.copy(req['docs']['params'])
             for var in req['postparams']:
-                if var in req['docs']['params']:
-                    del req['docs']['params'][var]
+                if var.replace('?', '') in req['docs']['params']:
+                    del req['docs']['params'][var.replace('?', '')]
             %>
             
             ${docTable(req['docs'])}
@@ -127,8 +127,11 @@
                     %for var in req['postparams']:
                         <dt>${var | h}</dt>
                         <dd>
-                            %if var in postparams_doc:
-                                ${postparams_doc[var] | h}
+                            %if var[-1] == '?':
+                                <em>Optional.</em>
+                            %endif
+                            %if var.replace('?', '') in postparams_doc:
+                                ${postparams_doc[var.replace('?', '')] | h}
                             %endif
                         </dd>
                     %endfor
