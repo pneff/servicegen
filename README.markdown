@@ -30,6 +30,8 @@ hack day. Currently doesn't do much. There is:
   - An ANTLR grammar for a basic service description.
   - A generator in Python which gives some output based on what it parsed.
   - An extensive grammar documentation showing what's the intention.
+  - An output target to create a basic web.py application.
+  - An output target to create a basic HTML documentation.
 
 
 ## Usage
@@ -46,9 +48,19 @@ On a shell execute gen.py like this:
     whether the variable can be read from a cache or not depending
     on the keyword "cached".
 
-## Future
+## TODO
 
-We'll see. :-)
+  - Specified but to implement:
+    - Missing functions in web.py target:
+      - log.*
+      - etag
+      - expires
+    - Correct output format for exceptions (XML, CSV, ...)
+    - Caching
+    - Caching of output blocks
+  - Inherent documentation for web.py target at /__docs or similar
+  - Language improvements:
+    - Re-use output blocks
 
 
 [web.py]:       http://webpy.org/
