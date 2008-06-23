@@ -1,6 +1,6 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
-   "http://www.w3.org/TR/html4/strict.dtd">
-<html lang="en">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
     <%def name="docTable(docs)">
         % if docs.has_key('doc'):
             <p>${docs['doc']}</p>
@@ -34,21 +34,24 @@
     </%def>
     
     <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <title>Service ${servicename}</title>
+        <link type="text/css" href="default.css" rel="stylesheet" />
     </head>
     <body>
         <h1>${servicename}</h1>
         ${docTable(service['docs'])}
         <hr />
         
-        <h2>Configuration</h2>
-        <p>These variables can be changed using the external config file.</p>
-        % for key, value in config.items():
-            <h3><em class="type">${value['type']}</em> ${key}</h3>
-            ${docTable(value['docs'])}
-        % endfor
-        <hr />
+        %if len(config) > 0:
+            <h2>Configuration</h2>
+            <p>These variables can be changed using the external config file.</p>
+            % for key, value in config.items():
+                <h3><em class="type">${value['type']}</em> ${key}</h3>
+                ${docTable(value['docs'])}
+            % endfor
+            <hr />
+        %endif
         
         <h2>Requests</h2>
         <h3>Summary</h3>
@@ -74,6 +77,19 @@
                 ${req['path']}
             </h3>
             ${docTable(req['docs'])}
+            
+            <h4>Output</h4>
+            <p>Supports the following output formats:</p>
+            <ul class="output">
+                %if len(req['output']) > 0:
+                    %for out_type, out in req['output'].iteritems():
+                        <li>${out_type}</li>
+                    %endfor
+                %else:
+                    <li>xml</li>
+                %endif
+            </ul>
+            <hr />
         % endfor
     </body>
 </html>
