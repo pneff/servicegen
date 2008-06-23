@@ -23,12 +23,17 @@ my_requests = my_requests[req_path]
 methods = [request for request in my_requests]
 
 def getStmValue(stm):
+    type = stm.getText()
     value = ''
     for i in range(stm.getChildCount()):
         value += stm.getChild(i).getText()
+    if type == 'LITERAL_STRING':
+        # Replace {foo} occurences with " + foo + "
+        value = re.sub("{([^}]+)}", '" + \g<1> + "', value)
+    
     return getValue({
         'value': value,
-        'type': stm.getText()})
+        'type': type})
 
 def path_params(req):
     # Only get path params
