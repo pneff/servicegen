@@ -35,7 +35,7 @@ def get(key):
         else:
             web.ctx.status = '400 Bad Request'
             web.header('Content-Type', 'text/html')
-            web.output('Missing value "' + key + '"\n')
+            web.ctx.outputter.write_exception(('missing value', 'Missing value "' + key + '"'))
             raise TerminateRequest, 'Missing value "' + key + '"'
 
 def get_config(key, type):

@@ -122,6 +122,7 @@ class ${req['name']}:
       %else:
         __outputter = servicegen.output.get_outputter('xml')
       %endif
+        web.ctx.outputter = __outputter
         __outputter.header()
         
         try:

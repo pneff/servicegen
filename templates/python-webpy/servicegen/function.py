@@ -18,7 +18,7 @@ def validate(value, comparison):
     if not matches:
         web.ctx.status = '400 Bad Request'
         web.header('Content-Type', 'text/html')
-        web.output('Invalid value "' + value + '"\n')
+        web.ctx.outputter.write_exception(('invalid value', 'Invalid value "' + value + '"'))
         raise TerminateRequest, 'Invalid value "' + value + '"'
 
 def etag(etag):
