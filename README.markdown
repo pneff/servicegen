@@ -51,10 +51,6 @@ On a shell execute gen.py like this:
 ## TODO
 
   - Specified but to implement:
-    - Missing functions in web.py target:
-      - etag
-      - expires
-    - Correct output format for exceptions (XML, CSV, ...)
     - Caching
     - Caching of output blocks
   - Inherent documentation for web.py target at /__docs or similar
