@@ -16,7 +16,21 @@ GetForecasts: GET "/{zip}" {
     
     records cached<1 day> weather = meteo_data.getWeather(zip);
     
-    @doc "Returns the weather forecast in XML format."
+    @doc "Returns the weather forecast in XML format.
+          Example:
+          
+          \\code
+            <meteo>
+                <zip>9000</zip>
+                <weather>
+                    <date>2008-06-07</date>
+                    <temparature>18</temparature>
+                    <type>17</type>
+                    <zip>9000</zip>
+                </weather>
+                <weather>...</weather>
+            </meteo>
+          \\endcode"
     output<xml> {
         <meteo>
             <zip>{zip}</zip>

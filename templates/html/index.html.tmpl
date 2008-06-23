@@ -1,17 +1,43 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+    <%def name="codize(str)">
+        <%
+        import re, mako.filters
+        def replacement_fun(match):
+            """Returns the code block, dedentend as far as possible."""
+            code = match.group(1)
+            # Determine indentation
+            indentation = 0
+            lines = code.splitlines()
+            firstline = lines[0]
+            for line in lines:
+                if line != "":
+                    firstline = line
+                    break
+            while indentation < len(firstline) and firstline[indentation] == ' ':
+                indentation += 1
+            code = "\n".join([line[indentation:] for line in code.splitlines()])
+            return '<code><pre>' + code + '</pre></code>'
+        
+        str = mako.filters.html_escape(str)
+        reg = re.compile('\\\\code(.*)\\\\endcode', re.DOTALL)
+        str = reg.sub(replacement_fun, str)
+        %>
+        ${str}
+    </%def>
+    
     <%def name="docTable(docs)">
         % if docs.has_key('doc'):
-            <p>${docs['doc']}</p>
+            <p>${codize(docs['doc'])}</p>
             <% del docs['doc'] %>
         % endif
         % if docs.has_key('params') and len(docs['params']) > 0:
             <h4>Parameters</h4>
             <dl class="params">
             % for key, value in docs['params'].iteritems():
-                <dt>${key}</dt>
-                <dd>${value}</dd>
+                <dt>${key | h}</dt>
+                <dd>${value | h}</dd>
             % endfor
             </dl>
         % endif
@@ -19,8 +45,8 @@
         % if len(docs) > 0:
             <dl class="info">
             % for key, value in docs.iteritems():
-                <dt>${key.capitalize()}</dt>
-                <dd>${value}</dd>
+                <dt>${key.capitalize() | h}</dt>
+                <dd>${value | h}</dd>
             % endfor
             </dl>
         % endif
@@ -35,12 +61,12 @@
     
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-        <title>Service ${servicename}</title>
+        <title>Service ${servicename | h}</title>
         <link rel="stylesheet" type="text/css" href="fonts-min.css">
         <link rel="stylesheet" type="text/css" href="default.css">
     </head>
     <body>
-        <h1>${servicename}</h1>
+        <h1>${servicename | h}</h1>
         ${docTable(service['docs'])}
         <hr />
         
@@ -48,7 +74,7 @@
             <h2>Configuration</h2>
             <p>These variables can be changed using the external config file.</p>
             % for key, value in config.items():
-                <h3><em class="type">${value['type']}</em> ${key}</h3>
+                <h3><em class="type">${value['type'] | h}</em> ${key | h}</h3>
                 ${docTable(value['docs'])}
             % endfor
             <hr />
@@ -59,10 +85,10 @@
         <table class="requests">
             % for req in requests:
                 <tr>
-                    <td class="method">${req['method']}</td>
+                    <td class="method">${req['method'] | h}</td>
                     <td>
                         <a href="#${makeRequestId(req)}">
-                            ${req['path']}
+                            ${req['path'] | h}
                         </a>
                         <br />
                         ${req['docs'].has_key('doc') and req['docs']['doc'] or ''}
@@ -74,8 +100,8 @@
         
         % for req in requests:
             <h3 id="${makeRequestId(req)}">
-                <em class="method">${req['method']}</em>
-                ${req['path']}
+                <em class="method">${req['method'] | h}</em>
+                ${req['path'] | h}
             </h3>
             ${docTable(req['docs'])}
             
@@ -84,7 +110,10 @@
             <ul class="output">
                 %if len(req['output']) > 0:
                     %for out_type, out in req['output'].iteritems():
-                        <li>${out_type}</li>
+                        <li>
+                            ${out_type | h}
+                            ${docTable(out['docs'])}
+                        </li>
                     %endfor
                 %else:
                     <li>xml</li>
