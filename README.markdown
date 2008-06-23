@@ -52,7 +52,6 @@ On a shell execute gen.py like this:
 
   - Specified but to implement:
     - Missing functions in web.py target:
-      - log.*
       - etag
       - expires
     - Correct output format for exceptions (XML, CSV, ...)
