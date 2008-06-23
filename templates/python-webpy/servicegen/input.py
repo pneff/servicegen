@@ -34,7 +34,6 @@ def get(key):
             return data[key]
         else:
             web.ctx.status = '400 Bad Request'
-            web.header('Content-Type', 'text/html')
             web.ctx.outputter.write_exception(('missing value', 'Missing value "' + key + '"'))
             raise TerminateRequest, 'Missing value "' + key + '"'
 

@@ -17,7 +17,6 @@ def validate(value, comparison):
         matches = (str(value) == str(comparison))
     if not matches:
         web.ctx.status = '400 Bad Request'
-        web.header('Content-Type', 'text/html')
         web.ctx.outputter.write_exception(('invalid value', 'Invalid value "' + value + '"'))
         raise TerminateRequest, 'Invalid value "' + value + '"'
 
