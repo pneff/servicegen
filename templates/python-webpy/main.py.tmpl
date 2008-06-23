@@ -32,7 +32,7 @@ web.config.db_parameters = servicegen.input.get_config('${key}', '${value['type'
 
 urls = (
     % for path, request in my_requests.iteritems():
-    # With excention
+    # With extension
     '${path}\.[a-z]{3,4}$',  '${request[0][1]}',
     # Without extension
     '${path}',               '${request[0][1]}',
