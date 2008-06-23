@@ -10,6 +10,8 @@ external:webpy "meteo_data.py";
 GetForecasts: GET "/{zip}" {
     validate zip, /[0-9]{4}/;
     log.info("Getting weather data for {zip}");
+    string date = meteo_data.getEtagTimestamp();
+    etag "{zip}_{date}";
     
     records cached<1 day> weather = meteo_data.getWeather(zip);
     

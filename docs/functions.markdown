@@ -54,10 +54,11 @@ handling. You call it with the hash you want to assign to the current request.
 If you pass in any non-string data type, servicegen will calculate a hash out
 of the variable's content.
 
-If the client has sent a "If-None-Match" HTTP header containing exactly that
-hash, then the request is immediately aborted and the response code 304 (Not
-Modified) is sent. If the client sets the "no-cache" option in its
-"Cache-Control" header, this behaviour is turned off.
+If the client has sent a "If-None-Match" HTTP header containing exactly
+that hash, then the request is immediately aborted and the response code
+304 (Not Modified) or 412 (Precondition Failed) is sent. If the client
+sets the "no-cache" option in its "Cache-Control" header, this behaviour
+is turned off.
 
 In the case that the request continues, the "ETag" response header is set.
 

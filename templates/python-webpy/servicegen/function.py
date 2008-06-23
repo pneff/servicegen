@@ -21,6 +21,35 @@ def validate(value, comparison):
         web.output('Invalid value "' + value + '"\n')
         raise TerminateRequest, 'Invalid value "' + value + '"'
 
+def etag(etag):
+    """
+    Calling the etag function allows you to implement a very easy HTTP cache
+    handling. You call it with the hash you want to assign to the current request.
+    If you pass in any non-string data type, servicegen will calculate a hash out
+    of the variable's content.
+
+    If the client has sent a "If-None-Match" HTTP header containing exactly
+    that hash, then the request is immediately aborted and the response code
+    304 (Not Modified) or 412 (Precondition Failed) is sent. If the client
+    sets the "no-cache" option in its "Cache-Control" header, this behaviour
+    is turned off.
+    
+    In the case that the request continues, the "ETag" response header is set.
+    """
+    web.header('ETag', etag)
+    
+    if 'HTTP_IF_NONE_MATCH' in web.ctx.env:
+        request_tag = web.ctx.env['HTTP_IF_NONE_MATCH']
+        tags = request_tag.split(',')
+        for tag in tags:
+            if tag.strip() == etag or tag.strip() == '*':
+                # Matches
+                if web.ctx.method.lower() in ('get', 'head'):
+                    web.ctx.status = '304 Not Modified'
+                else:
+                    web.ctx.status = '412 Precondition Failed'
+                raise TerminateRequest, 'Cached response for ETag "' + etag + '"'
+
 def get_cache(key):
     return None
 

@@ -1,4 +1,9 @@
 # Example module used with the meteo service.
+import time
+
+def getEtagTimestamp():
+    """Returns a timestamp to be used for the etag."""
+    return time.strftime("%Y-%m-%d")
 
 def getWeather(zip):
     return [
