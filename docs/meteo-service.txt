@@ -3,14 +3,14 @@
 @version "1.0"
 service meteo;
 
-external:webpy "data";
+external:webpy "meteo_data.py";
 
 @doc       "Returns all available forecasts for a ZIP code in Switzerland."
 @param zip "ZIP code for which to get weather forecast"
 GetForecasts: GET "/{zip}" {
     validate zip, /[0-9]{4}/;
     
-    records cached<1 day> weather = data.getWeather(zip);
+    records cached<1 day> weather = meteo_data.getWeather(zip);
     
     @doc "Returns the weather forecast in XML format."
     output<xml> {

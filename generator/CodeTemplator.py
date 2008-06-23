@@ -30,7 +30,8 @@ class CodeTemplator:
         externals = self.process.getService()['externals']
         if self.__options['type'] in externals:
             for source in externals[self.__options['type']]:
-                shutil.copyfile(source, os.path.join(self.__outdir, source))
+                shutil.copyfile(self.__options['sourcedir'] + '/' + source,
+                    os.path.join(self.__outdir, source))
     
     def __processFiles(self, path, files):
         for file in files:
