@@ -45,6 +45,12 @@ class Outputter:
     
     def write_hash(self, value, varname):
         pass
+    
+    def write_exception(self, exc_info):
+        self.write_records([{
+            'type':    exc_info[0],
+            'message': exc_info[1],
+        }], 'exception')
 
 
 class OutputterXML(Outputter):
