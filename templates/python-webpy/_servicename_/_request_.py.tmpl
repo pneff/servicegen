@@ -181,6 +181,6 @@ class ${req['name']}:
             return
         except:
             # Unexpected exception
-            logger.fatal("Unexcpected exception: %s" % sys.exc_info()[0])
+            logger.fatal("Unexcpected exception: %s - %s" % (sys.exc_info()[0], sys.exc_info()[1]))
             raise
   % endfor
