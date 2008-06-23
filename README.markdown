@@ -54,6 +54,7 @@ On a shell execute gen.py like this:
     - Caching
     - Caching of output blocks
   - Custom "not found" handler
+  - Add JSON output
 
 
 [web.py]:       http://webpy.org/
