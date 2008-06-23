@@ -284,6 +284,22 @@ class SimpleParserTest(unittest.TestCase):
         self.assertEqual(output.getType(), parser.servicegenLexer.STATEMENT_OUTPUT)
         self.assertEqual(output.getChild(0).getText(), 'xml')
     
+    def testOutputCondensed(self):
+        """
+        Tests parsing of output blocks when one output block defines two
+        formats.
+        """
+        service = self._parseService("output.txt")
+        root = service.tree
+        # Outputs get duplicated. 1st XML
+        output = service.tree.getChild(3).getChild(4).getChild(0)
+        self.assertEqual(output.getType(), parser.servicegenLexer.STATEMENT_OUTPUT)
+        self.assertEqual(output.getChild(0).getText(), 'xml')
+        # 2nd CSV
+        output = service.tree.getChild(3).getChild(4).getChild(1)
+        self.assertEqual(output.getType(), parser.servicegenLexer.STATEMENT_OUTPUT)
+        self.assertEqual(output.getChild(0).getText(), 'csv')
+    
     def testOutputVariableReference(self):
         """
         Tests parsing of variable references inside the output block.

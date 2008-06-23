@@ -164,8 +164,8 @@ statement
 
 /* Output of a service */
 outputDefinition
-    :   docStatement* 'output<' outputType '>' caching? '{' outputStatement* '}'
-                    -> ^(STATEMENT_OUTPUT outputType caching? outputStatement* docStatement*);
+    :   docStatement* 'output<' outputType (',' outputType)* '>' caching? '{' outputStatement* '}'
+                    -> ^(STATEMENT_OUTPUT outputType caching? outputStatement* docStatement*)+;
 outputType
     :   'xml' | 'csv';
 outputStatement

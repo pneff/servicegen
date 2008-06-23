@@ -54,8 +54,6 @@ On a shell execute gen.py like this:
     - Caching
     - Caching of output blocks
   - Custom "not found" handler
-  - Language improvements:
-    - Re-use output blocks
 
 
 [web.py]:       http://webpy.org/

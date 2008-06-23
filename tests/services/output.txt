@@ -16,3 +16,9 @@ GET "/additional" {
     output<xml> cached<8 months> {
     }
 }
+
+GET "/condensed" {
+    # Should return two identical output blocks
+    output<xml,csv> {
+    }
+}
