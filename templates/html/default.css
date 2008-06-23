@@ -2,6 +2,10 @@ td {
     vertical-align: top;
     padding: 0.1em;
 }
+
+dl {
+    margin-left: 2em;
+}
 dt {
     font-weight: bold;
 }

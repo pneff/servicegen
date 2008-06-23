@@ -103,7 +103,37 @@
                 <em class="method">${req['method'] | h}</em>
                 ${req['path'] | h}
             </h3>
+            <%
+            import copy
+            # Copy documentation for POST params to separate dictionary
+            postparams_doc = copy.copy(req['docs']['params'])
+            for var in req['postparams']:
+                if var in req['docs']['params']:
+                    del req['docs']['params'][var]
+            %>
+            
             ${docTable(req['docs'])}
+            
+            %if len(req['postparams']) > 0:
+                <h4>
+                    %if req['method'] in ('GET', 'HEAD'):
+                        Query string
+                    %else:
+                        POST
+                    %endif
+                    parameters
+                </h4>
+                <dl class="params">
+                    %for var in req['postparams']:
+                        <dt>${var | h}</dt>
+                        <dd>
+                            %if var in postparams_doc:
+                                ${postparams_doc[var] | h}
+                            %endif
+                        </dd>
+                    %endfor
+                </dl>
+            %endif
             
             <h4>Output</h4>
             <p>Supports the following output formats:</p>
