@@ -17,6 +17,8 @@ class CodeTemplator:
         self.process = process
     
     def setOption(self, key, value):
+        if key == 'sourcedir' and value == '':
+            value = '.'
         self.__options[key] = value
     
     def write(self, outputdir):
