@@ -2,3 +2,6 @@ td {
     vertical-align: top;
     padding: 0.1em;
 }
+dt {
+    font-weight: bold;
+}

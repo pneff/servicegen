@@ -8,7 +8,7 @@
         % endif
         % if docs.has_key('params') and len(docs['params']) > 0:
             <h4>Parameters</h4>
-            <dl>
+            <dl class="params">
             % for key, value in docs['params'].iteritems():
                 <dt>${key}</dt>
                 <dd>${value}</dd>
@@ -17,9 +17,9 @@
         % endif
         <% del docs['params'] %>
         % if len(docs) > 0:
-            <dl>
+            <dl class="info">
             % for key, value in docs.iteritems():
-                <dt>${key}</dt>
+                <dt>${key.capitalize()}</dt>
                 <dd>${value}</dd>
             % endfor
             </dl>
