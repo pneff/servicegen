@@ -12,6 +12,7 @@ GetForecasts: GET "/{zip}" {
     log.info("Getting weather data for {zip}");
     string date = meteo_data.getEtagTimestamp();
     etag "{zip}_{date}";
+    expires 2 hours;
     
     records cached<1 day> weather = meteo_data.getWeather(zip);
     

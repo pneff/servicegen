@@ -82,6 +82,17 @@ class CodeTemplator:
             return val
         elif type == 'LITERAL_REGEXP':
             return 're.compile(\'^' + val[1:-1] + '$\')'
+        elif type == 'LITERAL_DURATION':
+            dur_type = val[0][9:].lower()
+            dur_value = int(val[1])
+            if dur_type == 'months':
+                dur_type = 'days'
+                dur_value *= 30
+            elif dur_type == 'years':
+                dur_type = 'days'
+                dur_value *= 365
+            
+            return 'datetime.timedelta(%s=%d)' % (dur_type, dur_value)
         else:
             print "Unhandled type in getValue: %s" % type
             return val

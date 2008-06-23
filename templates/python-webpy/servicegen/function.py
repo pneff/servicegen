@@ -50,6 +50,23 @@ def etag(etag):
                     web.ctx.status = '412 Precondition Failed'
                 raise TerminateRequest, 'Cached response for ETag "' + etag + '"'
 
+def expires(delta):
+    """
+    Specifies how long the response is to be cached by clients. The input must be
+    of the duration variable type. For any other value the function will return
+    and log an error.
+
+    The function sets the two HTTP headers "Expires" and "Cache-Control"
+    correctly. Expires is for HTTP/1.0 implementations, Cache-Control for 1.1. The
+    effect is that the client knows that it can (but doesn't have to) cache the
+    response for the duration period.
+    
+    Duration must be a datetime.timedelta object (a duration in servicegen)
+    """
+    delta_secs = delta.days * 86400 + delta.seconds
+    web.expires(delta)
+    web.header('Cache-Control', 'max-age=' + str(delta_secs))
+
 def get_cache(key):
     return None
 
