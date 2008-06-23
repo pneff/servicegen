@@ -73,10 +73,12 @@
         %if len(config) > 0:
             <h2>Configuration</h2>
             <p>These variables can be changed using the external config file.</p>
-            % for key, value in config.items():
-                <h3><em class="type">${value['type'] | h}</em> ${key | h}</h3>
-                ${docTable(value['docs'])}
-            % endfor
+            <dl class="config">
+                % for key, value in config.items():
+                    <dt><em class="type">${value['type'] | h}</em> ${key | h}</dt>
+                    <dd>${docTable(value['docs'])}</dd>
+                % endfor
+            </dl>
             <hr />
         %endif
         
