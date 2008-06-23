@@ -53,7 +53,6 @@ On a shell execute gen.py like this:
   - Specified but to implement:
     - Caching
     - Caching of output blocks
-  - Inherent documentation for web.py target at /__docs or similar
   - Language improvements:
     - Re-use output blocks
 

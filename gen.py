@@ -10,17 +10,23 @@ def main():
     tree = service.parse(filename)
     # Generator("debug", tree.tree).write("out")
     
-    targets = {
-        'webpy': 'python-webpy',
-        'html' : 'html',
-    }
+    targets = (
+        # Name,   Template,       Outdir
+        ('webpy', 'python-webpy', 'webpy'),
+        ('html',  'html',         'webpy/static/docs/'),
+        ('html',  'html',         'html'),
+    )
     
-    for name, template in targets.iteritems():
+    for target in targets:
+        type = target[0]
+        template = target[1]
+        outdir = target[2]
+        
         gen = Generator("CodeTemplator", tree.tree)
         gen.setOption("template", sys.path[0] + "/templates/" + template)
         gen.setOption("sourcedir", os.path.dirname(filename))
-        gen.setOption("type", name)
-        gen.write("out/" + name)
+        gen.setOption("type", type)
+        gen.write("out/" + outdir)
 
 if __name__ == "__main__":
     main()
