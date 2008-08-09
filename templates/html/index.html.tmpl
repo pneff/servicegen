@@ -127,7 +127,7 @@
                 </h4>
                 <dl class="params">
                     %for var in req['postparams']:
-                        <dt>${var | h}</dt>
+                        <dt>${var.replace('?', '') | h}</dt>
                         <dd>
                             %if var[-1] == '?':
                                 <em>Optional.</em>
