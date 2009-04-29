@@ -1,3 +1,8 @@
+# Archived
+
+This project is no longer developed but left online for inspiration. A more
+pragmatic solution is [WsgiService][] started by the same author as servicegen.
+
 # servicegen
 
 servicegen is a small domain specific language to specify web services.
@@ -57,6 +62,7 @@ On a shell execute gen.py like this:
   - Add JSON output
 
 
+[WsgiService]:  http://github.com/pneff/wsgiservice
 [web.py]:       http://webpy.org/
 [Okapi]:        http://okapi.liip.ch/
 [Spring]:       http://www.springframework.org/
